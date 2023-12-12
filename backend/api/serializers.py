@@ -49,17 +49,23 @@ class RegionSerializer(serializers.ModelSerializer):
         model = Region
         fields = ['id', 'name']  # 必要に応じてフィールドを調整
 
+class YearSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Year
+        fields = ['year']
+
 # CountryRegionSerializerは、CountryとRegionのidまたはインスタンスを受け取るように変更します
 class CountryRegionSerializer(serializers.ModelSerializer):
-    country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.all())
-    region = serializers.PrimaryKeyRelatedField(queryset=Region.objects.all())
+    country = serializers.StringRelatedField()  # Country オブジェクトの文字列表現を使用
+    region = serializers.StringRelatedField()  # Region オブジェクトの文字列表現を使用
 
     class Meta:
         model = CountryRegion
-        fields = ['id', 'country', 'region']  # CountryとRegionのオブジェクトの代わりにIDを使用
+        fields = ['country', 'region']
 
 class EconomicDataSerializer(serializers.ModelSerializer):
     country_region = CountryRegionSerializer(read_only=True)
+    year = YearSerializer(read_only=True)
     # POSTリクエストでcountry_regionをIDで受け取るために以下のフィールドを追加
     country_region_id = serializers.PrimaryKeyRelatedField(
         write_only=True,

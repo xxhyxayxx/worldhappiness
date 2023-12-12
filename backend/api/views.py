@@ -6,8 +6,8 @@ from rest_framework import generics, viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from api.serializers import WorldHappinessTokenObtainPairSerializer, RegisterSerializer, CountrySerializer, RegionSerializer, CountryRegionSerializer, EconomicDataSerializer
-from .models import Country, Region, CountryRegion, EconomicData
+from api.serializers import WorldHappinessTokenObtainPairSerializer, RegisterSerializer, CountrySerializer, RegionSerializer, CountryRegionSerializer, EconomicDataSerializer, YearSerializer
+from .models import Country, Region, CountryRegion, EconomicData, Year
 
 class WorldHappinessTokenObtainPairView(TokenObtainPairView):
     serializer_class = WorldHappinessTokenObtainPairSerializer
@@ -40,6 +40,11 @@ class RegionViewSet(viewsets.ModelViewSet):
 class CountryRegionViewSet(viewsets.ModelViewSet):
     queryset = CountryRegion.objects.all()
     serializer_class = CountryRegionSerializer
+    permission_classes = [IsAuthenticated]
+
+class YearViewSet(viewsets.ModelViewSet):
+    queryset = Year.objects.all()
+    serializer_class = YearSerializer
     permission_classes = [IsAuthenticated]
 
 class EconomicDataViewSet(viewsets.ModelViewSet):

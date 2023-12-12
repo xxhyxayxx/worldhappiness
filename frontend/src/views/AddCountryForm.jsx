@@ -1,56 +1,72 @@
 import { useEffect, useState } from 'react';
-import { addCountry, getRegions } from '../api/data';
+import { addEconomicData, getCountryRegions, getYears } from '../api/data';
 import { useNavigate } from 'react-router-dom';
 
-const AddCountryForm = () => {
-  const [name, setName] = useState('');
-  const [regions, setRegions] = useState([]);
-  const [selectedRegion, setSelectedRegion] = useState('');
-  const navigate = useNavigate();
+const AddEconomicDataForm = () => {
+    const [countryRegions, setCountryRegions] = useState([]);
+    const [selectedCountryRegion, setSelectedCountryRegion] = useState('');
+    const [years, setYears] = useState([]);
+    const [selectedYear, setSelectedYear] = useState('');
+    const [gdp, setGdp] = useState('');
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    // Region のデータを取得
-    const fetchRegions = async () => {
-      const data = await getRegions();
-      setRegions(data);
+    useEffect(() => {
+        // CountryRegion と Year のデータを取得
+        const fetchData = async () => {
+            const countryRegionsData = await getCountryRegions();
+            setCountryRegions(countryRegionsData);
+            const yearsData = await getYears();
+            setYears(yearsData);
+        };
+        fetchData();
+    }, []);
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            await addEconomicData({ country_region_id: selectedCountryRegion, year_id: selectedYear, gdp });
+            navigate('/economic-data');
+            // 成功した場合の処理
+        } catch (error) {
+            // エラー処理
+        }
     };
-    fetchRegions();
-  }, []);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      await addCountry({ name, region: selectedRegion });
-      navigate('/countries');
-      // 成功した場合の処理
-    } catch (error) {
-      // エラー処理
-    }
-  };
+    return (
+        <form onSubmit={handleSubmit}>
+            {/* CountryRegion の選択 */}
+            <select
+                value={selectedCountryRegion}
+                onChange={(e) => setSelectedCountryRegion(e.target.value)}
+            >
+                {countryRegions.map((cr) => (
+                    <option key={cr.id} value={cr.id}>
+                        {cr.country} - {cr.region}
+                    </option>
+                ))}
+            </select>
 
-  return (
-    <form onSubmit={handleSubmit}>
-      {/* 国名の入力フィールド */}
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Country name"
-      />
-      {/* Region の選択 */}
-      <select
-        value={selectedRegion}
-        onChange={(e) => setSelectedRegion(e.target.value)}
-      >
-        {regions.map((region) => (
-          <option key={region.id} value={region.id}>
-            {region.name}
-          </option>
-        ))}
-      </select>
-      <button type="submit">Add Country</button>
-    </form>
-  );
+            <select
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+            >
+                {years.map((year) => (
+                    <option key={year} value={year}>
+                        {year}
+                    </option>
+                ))}
+            </select>
+
+            {/* GDP の入力 */}
+            <input
+                type="number"
+                value={gdp}
+                onChange={(e) => setGdp(e.target.value)}
+                placeholder="GDP"
+            />
+            <button type="submit">Add Economic Data</button>
+        </form>
+    );
 };
 
-export default AddCountryForm;
+export default AddEconomicDataForm;

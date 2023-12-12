@@ -4,8 +4,14 @@ class Country(models.Model):
     name = models.CharField(max_length=100)
     regions = models.ManyToManyField('Region', through='CountryRegion')
     
+    def __str__(self):
+        return self.name
+    
 class Region(models.Model):
     name = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.name
 
 class CountryRegion(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
@@ -13,6 +19,9 @@ class CountryRegion(models.Model):
 
 class Year(models.Model):
     year = models.IntegerField()
+    
+    def __str__(self):
+        return self.name
 
 class EconomicData(models.Model):
     country_region = models.ForeignKey(CountryRegion, on_delete=models.CASCADE, null=True)
