@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
+from .models import Country, Region, Year, CountryRegion, EconomicData
 
 class WorldHappinessTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -37,3 +38,46 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = ['id', 'name']  # 必要に応じてフィールドを調整
+
+class RegionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = ['id', 'name']  # 必要に応じてフィールドを調整
+
+# CountryRegionSerializerは、CountryとRegionのidまたはインスタンスを受け取るように変更します
+class CountryRegionSerializer(serializers.ModelSerializer):
+    country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.all())
+    region = serializers.PrimaryKeyRelatedField(queryset=Region.objects.all())
+
+    class Meta:
+        model = CountryRegion
+        fields = ['id', 'country', 'region']  # CountryとRegionのオブジェクトの代わりにIDを使用
+
+class EconomicDataSerializer(serializers.ModelSerializer):
+    country_region = CountryRegionSerializer(read_only=True)
+    # POSTリクエストでcountry_regionをIDで受け取るために以下のフィールドを追加
+    country_region_id = serializers.PrimaryKeyRelatedField(
+        write_only=True,
+        queryset=CountryRegion.objects.all(),
+        source='country_region'
+    )
+    year_id = serializers.PrimaryKeyRelatedField(
+        write_only=True,
+        queryset=Year.objects.all(),
+        source='year'
+    )
+
+    class Meta:
+        model = EconomicData
+        fields = '__all__'  # 必要に応じてフィールドを調整
+        extra_kwargs = {
+            'country_region': {'read_only': True},
+            'year': {'read_only': True}
+        }
+        
+         

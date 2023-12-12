@@ -2,11 +2,12 @@
 
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from api.serializers import WorldHappinessTokenObtainPairSerializer, RegisterSerializer
+from api.serializers import WorldHappinessTokenObtainPairSerializer, RegisterSerializer, CountrySerializer, RegionSerializer, CountryRegionSerializer, EconomicDataSerializer
+from .models import Country, Region, CountryRegion, EconomicData
 
 class WorldHappinessTokenObtainPairView(TokenObtainPairView):
     serializer_class = WorldHappinessTokenObtainPairSerializer
@@ -25,3 +26,23 @@ def getRoutes(request):
         '/api/test/'
     ]
     return Response(routes)
+
+class CountryViewSet(viewsets.ModelViewSet):
+    queryset = Country.objects.all()
+    serializer_class = CountrySerializer
+    permission_classes = [IsAuthenticated]
+
+class RegionViewSet(viewsets.ModelViewSet):
+    queryset = Region.objects.all()
+    serializer_class = RegionSerializer
+    permission_classes = [IsAuthenticated]
+
+class CountryRegionViewSet(viewsets.ModelViewSet):
+    queryset = CountryRegion.objects.all()
+    serializer_class = CountryRegionSerializer
+    permission_classes = [IsAuthenticated]
+
+class EconomicDataViewSet(viewsets.ModelViewSet):
+    queryset = EconomicData.objects.all()
+    serializer_class = EconomicDataSerializer
+    permission_classes = [IsAuthenticated]
