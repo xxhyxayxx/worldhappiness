@@ -20,8 +20,9 @@ const AddCountryForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await addCountry({ name, region: selectedRegion });
-      navigate('/countries');
+      // selectedRegion は選択されたリージョンの ID
+      await addCountry({ name, region_id: selectedRegion });
+      navigate('/countries')
       // 成功した場合の処理
     } catch (error) {
       // エラー処理

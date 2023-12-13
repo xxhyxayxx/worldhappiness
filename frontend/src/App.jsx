@@ -10,10 +10,16 @@ import Register from './views/Register';
 import Countries from './views/Countries';
 import AddCountryForm from './views/AddCountryForm';
 import EditCountryForm from './views/EditCountryForm';
+import EconomicDataList from './views/EconomicDataList';
+import AddEconomicDataForm from './views/AddEconomicDataForm';
+import EditEconomicDataForm from './views/EditEconomicDataForm';
+import Header from './views/Header';
+
 
 function App() {
     return (
         <BrowserRouter>
+        <Header />
             <MainWrapper>
                 <Routes>
                     <Route
@@ -31,6 +37,10 @@ function App() {
                     <Route path="/countries" element={<Countries />} />
                     <Route path="/add-country" element={<AddCountryForm />} />
                     <Route path="/edit-country/:countryId" element={<EditCountryForm />} />
+
+                    <Route path="/economic-data" element={<EconomicDataList />} />
+                    <Route path="/add-economic-data" element={<AddEconomicDataForm />} />
+                    <Route path="/edit-economic-data/:economicDataId" element={<EditEconomicDataForm />} />
                 </Routes>
             </MainWrapper>
         </BrowserRouter>
