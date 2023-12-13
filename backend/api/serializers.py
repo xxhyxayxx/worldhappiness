@@ -40,9 +40,26 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 class CountrySerializer(serializers.ModelSerializer):
+    region_id = serializers.PrimaryKeyRelatedField(
+        write_only=True,
+        queryset=Region.objects.all(),
+        source='region'
+    )
+
     class Meta:
         model = Country
-        fields = ['id', 'name']  # 必要に応じてフィールドを調整
+        fields = ['id', 'name', 'region_id']
+
+    def create(self, validated_data):
+        # validated_data から region を取得
+        region = validated_data.pop('region', None)
+        country = Country.objects.create(**validated_data)
+        
+        if region:
+            # 選択されたリージョンを使って CountryRegion インスタンスを作成
+            CountryRegion.objects.create(country=country, region=region)
+        
+        return country
 
 class RegionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,16 +69,28 @@ class RegionSerializer(serializers.ModelSerializer):
 class YearSerializer(serializers.ModelSerializer):
     class Meta:
         model = Year
-        fields = ['year']
+        fields = ['id', 'year']  # IDフィールドを追加
 
-# CountryRegionSerializerは、CountryとRegionのidまたはインスタンスを受け取るように変更します
 class CountryRegionSerializer(serializers.ModelSerializer):
-    country = serializers.StringRelatedField()  # Country オブジェクトの文字列表現を使用
-    region = serializers.StringRelatedField()  # Region オブジェクトの文字列表現を使用
+    country_id = serializers.PrimaryKeyRelatedField(
+        source='country',
+        queryset=Country.objects.all(),
+        write_only=True
+    )
+    region_id = serializers.PrimaryKeyRelatedField(
+        source='region',
+        queryset=Region.objects.all(),
+        write_only=True
+    )
+    country = serializers.StringRelatedField(read_only=True)  # 読み取り専用
+    region = serializers.StringRelatedField(read_only=True)   # 読み取り専用
+
+    # 追加する部分
+    id = serializers.IntegerField(source='pk', read_only=True)
 
     class Meta:
         model = CountryRegion
-        fields = ['country', 'region']
+        fields = ['id', 'country_id', 'region_id', 'country', 'region']
 
 class EconomicDataSerializer(serializers.ModelSerializer):
     country_region = CountryRegionSerializer(read_only=True)

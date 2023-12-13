@@ -13,11 +13,13 @@ import EditCountryForm from './views/EditCountryForm';
 import EconomicDataList from './views/EconomicDataList';
 import AddEconomicDataForm from './views/AddEconomicDataForm';
 import EditEconomicDataForm from './views/EditEconomicDataForm';
+import Header from './views/Header';
 
 
 function App() {
     return (
         <BrowserRouter>
+        <Header />
             <MainWrapper>
                 <Routes>
                     <Route

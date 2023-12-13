@@ -3,8 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getEconomicDataById, updateEconomicData, getCountryRegions, getYears } from '../api/data';
 
 const EditEconomicDataForm = () => {
-  const [countryRegion, setCountryRegion] = useState('');
-  const [year, setYear] = useState('');
+  // ステート変数の初期値として ID を使用
+  const [selectedCountryRegionId, setSelectedCountryRegionId] = useState('');
+  const [selectedYearId, setSelectedYearId] = useState('');
   const [gdp, setGdp] = useState('');
   const [countryRegions, setCountryRegions] = useState([]);
   const [years, setYears] = useState([]);
@@ -15,8 +16,9 @@ const EditEconomicDataForm = () => {
     const fetchEconomicDataAndOptions = async () => {
       try {
         const economicData = await getEconomicDataById(economicDataId);
-        setCountryRegion(economicData.country_region);
-        setYear(economicData.year);
+        // 経済データのロード時に ID を使用
+        setSelectedCountryRegionId(economicData.country_region.id);
+        setSelectedYearId(economicData.year.id);
         setGdp(economicData.gdp);
 
         const regionsData = await getCountryRegions();
@@ -34,7 +36,12 @@ const EditEconomicDataForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await updateEconomicData(economicDataId, { country_region: countryRegion, year, gdp });
+      // 更新時に ID を使用
+      await updateEconomicData(economicDataId, {
+        country_region_id: selectedCountryRegionId,
+        year_id: selectedYearId,
+        gdp
+      });
       navigate('/economic-data');
     } catch (error) {
       // エラー処理
@@ -45,8 +52,8 @@ const EditEconomicDataForm = () => {
     <form onSubmit={handleSubmit}>
       {/* CountryRegion のセレクトボックス */}
       <select
-        value={countryRegion}
-        onChange={(e) => setCountryRegion(e.target.value)}
+        value={selectedCountryRegionId}
+        onChange={(e) => setSelectedCountryRegionId(e.target.value)}
       >
         {countryRegions.map((cr) => (
           <option key={cr.id} value={cr.id}>
@@ -57,12 +64,12 @@ const EditEconomicDataForm = () => {
 
       {/* Year のセレクトボックス */}
       <select
-        value={year}
-        onChange={(e) => setYear(e.target.value)}
+        value={selectedYearId}
+        onChange={(e) => setSelectedYearId(e.target.value)}
       >
-        {years.map(year => (
-          <option key={year} value={year}>
-            {year}
+        {years.map((y) => (
+          <option key={y.id} value={y.id}>
+            {y.year}
           </option>
         ))}
       </select>
