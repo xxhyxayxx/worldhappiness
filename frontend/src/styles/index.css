@@ -46,3 +46,30 @@ button:hover{
 ul{
   list-style: none;
 }
+
+input {
+	margin: 0;
+	padding: 0;
+	background: none;
+	border: none;
+	border-radius: 0;
+	outline: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+input{
+  height: 32px;
+  border: 1px solid #333;
+  margin: 0 0 12px;
+  padding: 0px 12px;
+}
+
+input::placeholder{
+  font-family: 'JetBrains Mono', monospace;
+}
+
+label{
+  margin: 0 10px 0 0;
+}
