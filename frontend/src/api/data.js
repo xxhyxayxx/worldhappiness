@@ -75,3 +75,32 @@ export const getEconomicDataById = async (economicDataId) => {
     const response = await axios.get(`economicdata/${economicDataId}/`);
     return response.data;
 };
+
+export const getSocialSupportData = async () => {
+    const axios = useAxios();
+    const response = await axios.get('socialsupportdata/');
+    return response.data;
+};
+
+export const addSocialSupportData = async (socialSupportData) => {
+  const axios = useAxios();
+  const response = await axios.post('socialsupportdata/', socialSupportData);
+  return response.data;
+};
+
+export const updateSocialSupportData = async (socialSupportDataId, socialSupportData) => {
+  const axios = useAxios();
+  const response = await axios.put(`socialsupportdata/${socialSupportDataId}/`, socialSupportData);
+  return response.data;
+};
+
+export const deleteSocialSupportData = async (socialSupportDataId) => {
+  const axios = useAxios();
+  await axios.delete(`socialsupportdata/${socialSupportDataId}/`);
+};
+
+export const getSocialSupportDataById = async (socialSupportDataId) => {
+    const axios = useAxios();
+    const response = await axios.get(`socialsupportdata/${socialSupportDataId}/`);
+    return response.data;
+};

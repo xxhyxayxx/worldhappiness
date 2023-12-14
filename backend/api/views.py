@@ -3,11 +3,11 @@
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import generics, viewsets
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from api.serializers import WorldHappinessTokenObtainPairSerializer, RegisterSerializer, CountrySerializer, RegionSerializer, CountryRegionSerializer, EconomicDataSerializer, YearSerializer
-from .models import Country, Region, CountryRegion, EconomicData, Year
+from api.serializers import WorldHappinessTokenObtainPairSerializer, RegisterSerializer, CountrySerializer, RegionSerializer, CountryRegionSerializer, EconomicDataSerializer, YearSerializer, SocialSupportDataSerializer
+from .models import Country, Region, CountryRegion, EconomicData, Year, SocialSupportData
 
 class WorldHappinessTokenObtainPairView(TokenObtainPairView):
     serializer_class = WorldHappinessTokenObtainPairSerializer
@@ -50,4 +50,9 @@ class YearViewSet(viewsets.ModelViewSet):
 class EconomicDataViewSet(viewsets.ModelViewSet):
     queryset = EconomicData.objects.all()
     serializer_class = EconomicDataSerializer
+    permission_classes = [IsAuthenticated]
+
+class SocialSupportDataViewSet(viewsets.ModelViewSet):
+    queryset = SocialSupportData.objects.all()
+    serializer_class = SocialSupportDataSerializer
     permission_classes = [IsAuthenticated]

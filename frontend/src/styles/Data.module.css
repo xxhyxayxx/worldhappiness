@@ -1,10 +1,10 @@
-.dataBox{
+.dataBox, .editBox, .addBox{
     display: flex;
     align-items: center;
     flex-flow: column;
 }
 
-.addData{
+.addDataButton{
     padding: 10px 20px;
     border: 2px solid #1e1e1e;
 }
@@ -13,7 +13,7 @@
     font-size: 2.5rem;
 }
 
-.addData:hover{
+.addDataButton:hover{
     background-color: #ff69b4;
     border: 2px solid #ff69b4;
     color: #fff;
@@ -90,7 +90,6 @@
     display: inline-block;
     width: 2.8em;
     height: 2.8em;
-    border-radius: 0 3px 3px 0;
     background-color: #1e1e1e;
     content: '';
   }
@@ -115,7 +114,6 @@
     height: 2.8em;
     padding: .4em 3.6em .4em .8em;
     border: 2px solid #1e1e1e;
-    border-radius: 3px;
     color: #1e1e1e;
     font-size: 1em;
     cursor: pointer;
@@ -124,3 +122,66 @@
   .selectYear select:focus {
     outline: 1px solid #1e1e1e;
   }
+
+  .editData, .addData{
+    width: 600px;
+    display: flex;
+    flex-flow: column;
+  }
+
+  .selectBox, .Input {
+    display: block;
+    margin: 0 0 20px;
+    position: relative;
+    height: 40px;
+    border: 2px solid #1e1e1e;
+    font-size: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 0 12px;
+  }
+  
+  .selectBox::before,
+  .selectBox::after {
+    position: absolute;
+    content: '';
+    pointer-events: none;
+  }
+  
+  .selectBox::before {
+    display: inline-block;
+    right: 0;
+    width: 2.8em;
+    height: 2.8em;
+    border-radius: 0;
+    background-color: #2589d0;
+  }
+  
+  .selectBox::after {
+    position: absolute;
+    top: 50%;
+    right: 1.4em;
+    transform: translate(50%, -50%) rotate(45deg);
+    width: 6px;
+    height: 6px;
+    border-bottom: 3px solid #fff;
+    border-right: 3px solid #fff;
+  }
+  
+  .selectBox select {
+    appearance: none;
+    min-width: 230px;
+    height: 2.8em;
+    padding: .4em 3.6em .4em .8em;
+    border: none;
+    border-radius: 0;
+    background-color: #e6edf3;
+    color: #333;
+    font-size: 1em;
+    cursor: pointer;
+  }
+  
+  .selectBox select:focus {
+    outline: 2px solid #2589d0;
+  }
+
+

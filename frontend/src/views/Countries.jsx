@@ -33,7 +33,7 @@ const Countries = () => {
     return (
         <div className={styles.dataBox}>
             <h1 className={styles.dataTitle}>Countries</h1>
-            <Link to="/add-country" className={styles.addData}>Add New Country</Link>
+            <Link to="/add-country" className={styles.addDataButton}>Add New Country</Link>
             <ul className={styles.coutryDataList}>
                 {countries.map(country => (
                     <li key={country.id} className={styles.countryListItem}>

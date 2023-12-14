@@ -1,26 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { addEconomicData, getCountryRegions, getYears } from '../api/data';
+import styles from '../styles/Data.module.css';
 
 const AddEconomicDataForm = () => {
-    const [countryRegion, setCountryRegion] = useState('');
-    const [selectedYear, setSelectedYear] = useState('');
     const [gdp, setGdp] = useState('');
     const [countryRegions, setCountryRegions] = useState([]);
     const [years, setYears] = useState([]);
     const navigate = useNavigate();
-     // 選択された CountryRegion の ID を保持するための State
-     const [selectedCountryRegionId, setSelectedCountryRegionId] = useState('');
-     // 選択された Year の ID を保持するための State
-     const [selectedYearId, setSelectedYearId] = useState('');
+    // 選択された CountryRegion の ID を保持するための State
+    const [selectedCountryRegionId, setSelectedCountryRegionId] = useState('');
+    // 選択された Year の ID を保持するための State
+    const [selectedYearId, setSelectedYearId] = useState('');
 
-     useEffect(() => {
+    useEffect(() => {
         const fetchData = async () => {
             const countryRegionsData = await getCountryRegions();
             const yearsData = await getYears();
-            
-            console.log('CountryRegions data:', countryRegionsData);
-            console.log('Years data:', yearsData);
 
             if (countryRegionsData.length > 0) {
                 setSelectedCountryRegionId(countryRegionsData[0].id); // 最初の要素のIDを初期値に設定
@@ -65,28 +61,32 @@ const AddEconomicDataForm = () => {
 
 
     return (
-        <form onSubmit={handleSubmit}>
-            <select value={selectedCountryRegionId} onChange={handleCountryRegionChange}>
-                {countryRegions.map((cr) => (
-                    <option key={cr.id} value={cr.id}>{cr.country} - {cr.region}</option>
-                ))}
-            </select>
-            <select value={selectedYearId} onChange={handleYearChange}>
-                {years.map((year) => (
-                    <option key={year.id} value={year.id}>{year.year}</option>
-                ))}
-            </select>
+        <div className={styles.addBox}>
+            <h1 className={styles.dataTitle}>Add Economic Data</h1>
+            <form onSubmit={handleSubmit} className={styles.addData}>
+                <select value={selectedCountryRegionId} onChange={handleCountryRegionChange} className={styles.selectBox}>
+                    {countryRegions.map((cr) => (
+                        <option key={cr.id} value={cr.id}>{cr.country} - {cr.region}</option>
+                    ))}
+                </select>
+                <select value={selectedYearId} onChange={handleYearChange} className={styles.selectBox}>
+                    {years.map((year) => (
+                        <option key={year.id} value={year.id}>{year.year}</option>
+                    ))}
+                </select>
 
-            {/* GDP の入力 */}
-            <input
-                type="number"
-                value={gdp}
-                onChange={(e) => setGdp(e.target.value)}
-                placeholder="GDP"
-            />
+                {/* GDP の入力 */}
+                <input
+                    type="number"
+                    value={gdp}
+                    onChange={(e) => setGdp(e.target.value)}
+                    placeholder="GDP"
+                    className={styles.Input}
+                />
 
-            <button type="submit">Add Economic Data</button>
-        </form>
+                <button type="submit">Add Economic Data</button>
+            </form>
+        </div>
     );
 };
 

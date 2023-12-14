@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from .models import Country, Region, Year, CountryRegion, EconomicData
+from .models import Country, Region, Year, CountryRegion, EconomicData, SocialSupportData
 
 class WorldHappinessTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -110,6 +110,29 @@ class EconomicDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = EconomicData
         fields = '__all__'  # 必要に応じてフィールドを調整
+        extra_kwargs = {
+            'country_region': {'read_only': True},
+            'year': {'read_only': True}
+        }
+
+class SocialSupportDataSerializer(serializers.ModelSerializer):
+    country_region = CountryRegionSerializer(read_only=True)
+    year = YearSerializer(read_only=True)
+
+    country_region_id = serializers.PrimaryKeyRelatedField(
+        write_only=True,
+        queryset=CountryRegion.objects.all(),
+        source='country_region'
+    )
+    year_id = serializers.PrimaryKeyRelatedField(
+        write_only=True,
+        queryset=Year.objects.all(),
+        source='year'
+    )
+
+    class Meta:
+        model = SocialSupportData
+        fields = '__all__' 
         extra_kwargs = {
             'country_region': {'read_only': True},
             'year': {'read_only': True}
