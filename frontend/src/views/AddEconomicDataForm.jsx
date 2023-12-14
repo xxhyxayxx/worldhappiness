@@ -12,6 +12,7 @@ const AddEconomicDataForm = () => {
     const [selectedCountryRegionId, setSelectedCountryRegionId] = useState('');
     // 選択された Year の ID を保持するための State
     const [selectedYearId, setSelectedYearId] = useState('');
+    const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -31,6 +32,23 @@ const AddEconomicDataForm = () => {
         fetchData();
     }, []);
 
+    const validateInput = () => {
+        // 全てのフィールドが入力されているか確認
+        if (!selectedCountryRegionId || !selectedYearId || !gdp) {
+            setError('All fields must be filled.');
+            return false;
+        }
+        // gdp の入力値が適切な形式であるか確認
+        const regex = /^\d{0,7}(\.\d{0,3})?$/;
+        if (!regex.test(gdp)) {
+            setError('GDP must be a number with up to 10 digits and 3 decimal places.');
+            return false;
+        }
+        // 他のバリデーションロジックが必要な場合はここに追加
+        setError('');
+        return true;
+    };
+
     // onChangeハンドラー
     const handleCountryRegionChange = (e) => {
         setSelectedCountryRegionId(e.target.value); // 選択されたIDをステートにセット
@@ -43,6 +61,10 @@ const AddEconomicDataForm = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        const isValid = validateInput();
+        if (!isValid) {
+            return; // バリデーションが失敗した場合はここで処理を止める
+        }
         const payload = {
             country_region_id: selectedCountryRegionId, // 正しいステートを使用
             year_id: selectedYearId,                    // 正しいステートを使用
@@ -63,6 +85,7 @@ const AddEconomicDataForm = () => {
     return (
         <div className={styles.addBox}>
             <h1 className={styles.dataTitle}>Add Economic Data</h1>
+            {error && <p className={styles.error}>{error}</p>}
             <form onSubmit={handleSubmit} className={styles.addData}>
                 <select value={selectedCountryRegionId} onChange={handleCountryRegionChange} className={styles.selectBox}>
                     {countryRegions.map((cr) => (

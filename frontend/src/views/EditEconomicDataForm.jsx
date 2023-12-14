@@ -12,6 +12,7 @@ const EditEconomicDataForm = () => {
     const [years, setYears] = useState([]);
     const { economicDataId } = useParams();
     const navigate = useNavigate();
+    const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchEconomicDataAndOptions = async () => {
@@ -34,10 +35,32 @@ const EditEconomicDataForm = () => {
         fetchEconomicDataAndOptions();
     }, [economicDataId]);
 
+    const validateInput = () => {
+        // 全てのフィールドが入力されているか確認
+        if (!selectedCountryRegionId || !selectedYearId || !gdp) {
+            setError('All fields must be filled.');
+            return false;
+        }
+        // gdp の入力値が適切な形式であるか確認
+        const regex = /^\d{0,7}(\.\d{0,3})?$/;
+        if (!regex.test(gdp)) {
+            setError('GDP must be a number with up to 10 digits and 3 decimal places.');
+            return false;
+        }
+        // 他のバリデーションロジックが必要な場合はここに追加
+        setError('');
+        return true;
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
+        const isValid = validateInput();
+        if (!isValid) {
+            return; // バリデーションが失敗した場合はここで処理を止める
+        }
+
         try {
-            // 更新時に ID を使用
+            // バリデーションが成功した場合のみAPI呼び出しを行う
             await updateEconomicData(economicDataId, {
                 country_region_id: selectedCountryRegionId,
                 year_id: selectedYearId,
@@ -46,12 +69,14 @@ const EditEconomicDataForm = () => {
             navigate('/economic-data');
         } catch (error) {
             // エラー処理
+            setError('Failed to update economic data.');
         }
     };
 
     return (
         <div className={styles.editBox}>
             <h1 className={styles.dataTitle}>Edit Economic Data</h1>
+            {error && <p className={styles.error}>{error}</p>}
             <form onSubmit={handleSubmit} className={styles.editData}>
                 {/* CountryRegion のセレクトボックス */}
                 <select

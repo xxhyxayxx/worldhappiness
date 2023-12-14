@@ -32,6 +32,11 @@
     border-bottom: 1px solid #eee; /* 下部にボーダーを追加 */
 }
 
+.error {
+    color: red;
+    margin: 10px 0;
+}
+
 
 .listItem {
     display: grid;

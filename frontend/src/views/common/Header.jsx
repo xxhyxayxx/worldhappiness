@@ -1,7 +1,7 @@
 // components/Header.js
 import { Link } from 'react-router-dom';
-import { useAuthStore } from '../store/auth';
-import styles from '../styles/Header.module.css';
+import { useAuthStore } from '../../store/auth';
+import styles from '../../styles/Header.module.css';
 
 const Header = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn());

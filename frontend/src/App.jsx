@@ -13,7 +13,7 @@ import EconomicDataList from './views/EconomicDataList';
 import AddEconomicDataForm from './views/AddEconomicDataForm';
 import EditEconomicDataForm from './views/EditEconomicDataForm';
 import SocialSupportDataList from './views/SocialSupportDataList';
-import Header from './views/Header';
+import Header from './views/common/Header';
 
 
 function App() {
