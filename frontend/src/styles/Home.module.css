@@ -1,0 +1,26 @@
+.homeBox {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+.home{
+    max-width: 1024px;
+    text-align: center;
+}
+
+.homeTitle{
+    margin: 0;
+    font-size: 2.5rem;
+    margin: 120px 0 80px;
+}
+
+.homeText{
+    margin:0 0 40px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.homeText p{
+    text-align: left;
+}

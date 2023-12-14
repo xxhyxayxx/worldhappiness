@@ -7,21 +7,21 @@ const Header = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn());
 
   return (
-    <header>
+    <header className={styles.header}>
       <nav>
         <ul className={styles.nav}>
-          <li><Link to="/">Home</Link></li>
+          <li className={styles.home}><Link to="/">WORLD HAPPINESS DATA</Link></li>
           {isLoggedIn ? (
-            <>
-              <li><Link to="/countries">Countries</Link></li>
-              <li><Link to="/economic-data">Economic Data</Link></li>
-              <li><Link to="/logout">Logout</Link></li>
-            </>
+            <ul className={styles.subNav}>
+              <li className={styles.subNavItem}><Link to="/countries">Countries</Link></li>
+              <li className={styles.subNavItem}><Link to="/economic-data">Economic Data</Link></li>
+              <li className={styles.subNavItem}><Link to="/logout">Logout</Link></li>
+            </ul>
           ) : (
-            <>
-              <li><Link to="/login">Login</Link></li>
-              <li><Link to="/register">Register</Link></li>
-            </>
+            <ul className={styles.subNav}>
+              <li className={styles.subNavItem}><Link to="/login">Login</Link></li>
+              <li className={styles.subNavItem}><Link to="/register">Register</Link></li>
+            </ul>
           )}
         </ul>
       </nav>

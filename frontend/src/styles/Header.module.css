@@ -1,4 +1,15 @@
 .nav{
+    justify-content: space-between;
+    padding: 0 20px 10px;
+    border-bottom: 1px solid #1e1e1e;
+}
+
+.nav, .subNav{
     list-style: none;
     display: flex;
 }
+
+.subNavItem{
+    margin-right: 40px;
+}
+
