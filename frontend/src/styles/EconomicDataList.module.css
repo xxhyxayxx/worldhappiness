@@ -2,7 +2,7 @@
     width: 1024px;
 }
 
-.chartContainer {
+.chartContainer canvas{
     width: 100%;
     height: 500px;
     margin: auto;

@@ -1,0 +1,126 @@
+.dataBox{
+    display: flex;
+    align-items: center;
+    flex-flow: column;
+}
+
+.addData{
+    padding: 10px 20px;
+    border: 2px solid #1e1e1e;
+}
+
+.dataTitle{
+    font-size: 2.5rem;
+}
+
+.addData:hover{
+    background-color: #ff69b4;
+    border: 2px solid #ff69b4;
+    color: #fff;
+}
+
+.dataList, .countryDataList{
+    list-style: none;
+    margin: 40px 0 100px;
+}
+
+.countryListItem {
+    display: grid;
+    grid-template-columns: 600px auto auto; /* dataNameの幅を600pxに設定し、残りは可変 */
+    gap: 10px; /* アイテム間の間隔 */
+    align-items: center; /* アイテムを縦方向の中央に配置 */
+    border-bottom: 1px solid #eee; /* 下部にボーダーを追加 */
+}
+
+
+.listItem {
+    display: grid;
+    grid-template-columns: 600px auto auto auto auto; /* dataNameの幅を600pxに設定し、残りは可変 */
+    gap: 10px; /* アイテム間の間隔 */
+    align-items: center; /* アイテムを縦方向の中央に配置 */
+    border-bottom: 1px solid #eee; /* 下部にボーダーを追加 */
+}
+
+.dataName {
+    padding: 10px; /* パディングを適用 */
+    text-align: left; /* テキストを左揃えにする */
+}
+
+.editButton {
+    justify-self: start; /* ボタンをグリッドの開始位置に配置 */
+    padding: 10px; /* パディングを適用 */
+    text-decoration: underline;
+}
+
+.deleteButton {
+    justify-self: start; /* ボタンをグリッドの開始位置に配置 */
+    padding: 10px; /* パディングを適用 */
+    background: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    border: 2px solid #1e1e1e;
+}
+
+.deleteButton:hover{
+    background-color: #1e1e1e;
+    color: #fff;
+}
+
+.barBox{
+    text-align: right;
+}
+
+.selectYear {
+    position: relative;
+    margin: 40px 0 20px;
+    padding: 8px 12px;
+    border: 2px solid #1e1e1e;
+    font-size: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  
+  .selectYear::before,
+  .selectYear::after {
+    position: absolute;
+    content: '';
+    pointer-events: none;
+  }
+  
+  .selectYear::before {
+    right: 0;
+    display: inline-block;
+    width: 2.8em;
+    height: 2.8em;
+    border-radius: 0 3px 3px 0;
+    background-color: #1e1e1e;
+    content: '';
+  }
+  
+  .selectYear::after {
+    position: absolute;
+    top: 50%;
+    right: 1.4em;
+    transform: translate(50%, -50%) rotate(45deg);
+    width: 6px;
+    height: 6px;
+    border-bottom: 3px solid #fff;
+    border-right: 3px solid #fff;
+    content: '';
+  }
+  
+  .selectYear select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    min-width: 230px;
+    height: 2.8em;
+    padding: .4em 3.6em .4em .8em;
+    border: 2px solid #1e1e1e;
+    border-radius: 3px;
+    color: #1e1e1e;
+    font-size: 1em;
+    cursor: pointer;
+  }
+  
+  .selectYear select:focus {
+    outline: 1px solid #1e1e1e;
+  }
