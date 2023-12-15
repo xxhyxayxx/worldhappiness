@@ -3,9 +3,9 @@ from django.contrib.auth.models import User
 from rest_framework.exceptions import ValidationError
 from api.serializers import (
     RegisterSerializer, CountrySerializer, RegionSerializer, YearSerializer,
-    CountryRegionSerializer, EconomicDataSerializer
+    CountryRegionSerializer, EconomicDataSerializer, SocialSupportDataSerializer
 )
-from api.models import Country, Region, Year, CountryRegion, EconomicData
+from api.models import Country, Region, Year, CountryRegion
 
 class SerializersTestCase(TestCase):
     def setUp(self):
@@ -57,3 +57,14 @@ class SerializersTestCase(TestCase):
         self.assertTrue(serializer.is_valid())
         economic_data = serializer.save()
         self.assertEqual(economic_data.gdp, '12345.678')
+    
+    def test_social_support_data_serializer(self):
+        data = {
+            'country_region_id': self.country_region.pk,
+            'year_id': self.year.pk,
+            'social_support': '12345.678'
+        }
+        serializer = SocialSupportDataSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+        economic_data = serializer.save()
+        self.assertEqual(economic_data.social_support, '12345.678')

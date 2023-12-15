@@ -1,16 +1,15 @@
-import React from 'react';
-import { addEconomicData } from '../api/data';
+import { addSocialSupportData } from '../api/data';
 import useFormData from '../hooks/useFormData';
 import useSubmitForm from '../hooks/useSubmitForm';
 import useFetchCountryRegions from '../hooks/useFetchCountryRegions';
 import useFetchYears from '../hooks/useFetchYears';
 import CategoryDataForm from './common/CategoryDataForm';
 
-const AddEconomicDataForm = () => {
-    const { value: gdp, setValue: setGdp, validateValue, error: gdpError } = useFormData('', 'number');
+const AddSocialSupportDataForm = () => {
+    const { value: socialSupport, setValue: setSocialSupport, validateValue, error: socialSupportError } = useFormData('', 'number');
     const { handleSubmit, error: submitError } = useSubmitForm(async (payload) => {
-        await addEconomicData(payload);
-    }, '/economic-data');
+        await addSocialSupportData(payload);
+    }, '/socialsupport-data');
 
     const { countryRegions, selectedCountryRegionId, setSelectedCountryRegionId } = useFetchCountryRegions();
     const { years, selectedYearId, setSelectedYearId } = useFetchYears();
@@ -23,17 +22,17 @@ const AddEconomicDataForm = () => {
         const payload = {
             country_region_id: selectedCountryRegionId,
             year_id: selectedYearId,
-            gdp: gdp
+            social_support: socialSupport
         };
         await handleSubmit(payload);
     };
 
     return (
         <CategoryDataForm
-            title="Add Economic Data"
-            dataValue={gdp}
-            setDataValue={setGdp}
-            dataLabel="GDP"
+            title="Add Social Support Data"
+            dataValue={socialSupport}
+            setDataValue={setSocialSupport}
+            dataLabel="Social Support"
             handleSubmit={handleFormSubmit}
             countryRegions={countryRegions}
             selectedCountryRegionId={selectedCountryRegionId}
@@ -41,10 +40,10 @@ const AddEconomicDataForm = () => {
             years={years}
             selectedYearId={selectedYearId}
             setSelectedYearId={setSelectedYearId}
-            error={gdpError || submitError}
+            error={socialSupportError || submitError}
             formType="add"
         />
     );
 };
 
-export default AddEconomicDataForm;
+export default AddSocialSupportDataForm;

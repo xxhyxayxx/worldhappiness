@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { register } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
+import styles from '../styles/Data.module.css';
 
 function Register() {
     const [username, setUsername] = useState('');
@@ -34,10 +35,9 @@ function Register() {
     };
 
     return (
-        <section>
+        <section className={styles.loginBox}>
             <form onSubmit={handleSubmit}>
-                <h1>Register</h1>
-                <hr />
+                <h1 className={styles.registerTitle}>Register</h1>
                 <div>
                     <label htmlFor="username">Username</label>
                     <input
@@ -46,6 +46,7 @@ function Register() {
                         onChange={(e) => setUsername(e.target.value)}
                         placeholder="Username"
                         required
+                        className={styles.loginInput}
                     />
                 </div>
                 <div>
@@ -56,6 +57,7 @@ function Register() {
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Password"
                         required
+                        className={styles.loginInput}
                     />
                 </div>
                 <div>
@@ -66,12 +68,13 @@ function Register() {
                         onChange={(e) => setPassword2(e.target.value)}
                         placeholder="Confirm Password"
                         required
+                        className={styles.loginInput}
                     />
                     <p>
                         {password2 !== password ? 'Passwords do not match' : ''}
                     </p>
                 </div>
-                <button type="submit">Register</button>
+                <button type="submit" className={styles.loginSubmit}>Register</button>
             </form>
         </section>
     );

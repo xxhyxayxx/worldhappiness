@@ -37,7 +37,7 @@ const SocialSupportDataList = () => {
             <p>{data.country_region.country} - {data.country_region.region}</p>
             <p>{data.year.year}</p>
             <p>{data.social_support}</p>
-            <Link to={`/edit-social-support-data/${data.id}`} className={styles.editButton}>Edit</Link>
+            <Link to={`/edit-socialsupport-data/${data.id}`} className={styles.editButton}>Edit</Link>
             <button onClick={() => handleDelete(data.id)} className={styles.deleteButton}>Delete</button>
         </>
     );
@@ -45,7 +45,7 @@ const SocialSupportDataList = () => {
     return (
         <div className={styles.dataBox}>
             <h1 className={styles.dataTitle}>Social Support Data</h1>
-            <Link to="/add-social-support-data" className={styles.addDataButton}>Add New Social Support Data</Link>
+            <Link to="/add-socialsupport-data" className={styles.addDataButton}>Add New Social Support Data</Link>
             <div className={styles.barBox}>
                 <select value={selectedYear} onChange={e => setSelectedYear(e.target.value)} className={styles.selectYear}>
                     {years.map(year => <option key={year} value={year}>{year}</option>)}

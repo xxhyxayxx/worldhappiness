@@ -1,35 +1,44 @@
-.dataBox, .editBox, .addBox{
+.dataBox,
+.editBox,
+.addBox,
+.loginBox {
     display: flex;
     align-items: center;
     flex-flow: column;
 }
 
-.addDataButton{
+.addDataButton {
     padding: 10px 20px;
     border: 2px solid #1e1e1e;
 }
 
-.dataTitle{
+.dataTitle,
+.loginTitle {
     font-size: 2.5rem;
 }
 
-.addDataButton:hover{
+.addDataButton:hover {
     background-color: #ff69b4;
     border: 2px solid #ff69b4;
     color: #fff;
 }
 
-.dataList, .countryDataList{
+.dataList,
+.countryDataList {
     list-style: none;
     margin: 40px 0 100px;
 }
 
 .countryListItem {
     display: grid;
-    grid-template-columns: 600px auto auto; /* dataNameの幅を600pxに設定し、残りは可変 */
-    gap: 10px; /* アイテム間の間隔 */
-    align-items: center; /* アイテムを縦方向の中央に配置 */
-    border-bottom: 1px solid #eee; /* 下部にボーダーを追加 */
+    grid-template-columns: 600px auto auto;
+    /* dataNameの幅を600pxに設定し、残りは可変 */
+    gap: 10px;
+    /* アイテム間の間隔 */
+    align-items: center;
+    /* アイテムを縦方向の中央に配置 */
+    border-bottom: 1px solid #eee;
+    /* 下部にボーダーを追加 */
 }
 
 .error {
@@ -40,37 +49,47 @@
 
 .listItem {
     display: grid;
-    grid-template-columns: 600px auto auto auto auto; /* dataNameの幅を600pxに設定し、残りは可変 */
-    gap: 10px; /* アイテム間の間隔 */
-    align-items: center; /* アイテムを縦方向の中央に配置 */
-    border-bottom: 1px solid #eee; /* 下部にボーダーを追加 */
+    grid-template-columns: 600px auto auto auto auto;
+    /* dataNameの幅を600pxに設定し、残りは可変 */
+    gap: 10px;
+    /* アイテム間の間隔 */
+    align-items: center;
+    /* アイテムを縦方向の中央に配置 */
+    border-bottom: 1px solid #eee;
+    /* 下部にボーダーを追加 */
 }
 
 .dataName {
-    padding: 10px; /* パディングを適用 */
-    text-align: left; /* テキストを左揃えにする */
+    padding: 10px;
+    /* パディングを適用 */
+    text-align: left;
+    /* テキストを左揃えにする */
 }
 
 .editButton {
-    justify-self: start; /* ボタンをグリッドの開始位置に配置 */
-    padding: 10px; /* パディングを適用 */
+    justify-self: start;
+    /* ボタンをグリッドの開始位置に配置 */
+    padding: 10px;
+    /* パディングを適用 */
     text-decoration: underline;
 }
 
 .deleteButton {
-    justify-self: start; /* ボタンをグリッドの開始位置に配置 */
-    padding: 10px; /* パディングを適用 */
+    justify-self: start;
+    /* ボタンをグリッドの開始位置に配置 */
+    padding: 10px;
+    /* パディングを適用 */
     background: #fff;
     font-family: 'JetBrains Mono', monospace;
     border: 2px solid #1e1e1e;
 }
 
-.deleteButton:hover{
+.deleteButton:hover {
     background-color: #1e1e1e;
     color: #fff;
 }
 
-.barBox{
+.barBox {
     text-align: right;
 }
 
@@ -81,25 +100,25 @@
     border: 2px solid #1e1e1e;
     font-size: 1rem;
     font-family: 'JetBrains Mono', monospace;
-  }
-  
-  .selectYear::before,
-  .selectYear::after {
+}
+
+.selectYear::before,
+.selectYear::after {
     position: absolute;
     content: '';
     pointer-events: none;
-  }
-  
-  .selectYear::before {
+}
+
+.selectYear::before {
     right: 0;
     display: inline-block;
     width: 2.8em;
     height: 2.8em;
     background-color: #1e1e1e;
     content: '';
-  }
-  
-  .selectYear::after {
+}
+
+.selectYear::after {
     position: absolute;
     top: 50%;
     right: 1.4em;
@@ -109,9 +128,9 @@
     border-bottom: 3px solid #fff;
     border-right: 3px solid #fff;
     content: '';
-  }
-  
-  .selectYear select {
+}
+
+.selectYear select {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -122,19 +141,21 @@
     color: #1e1e1e;
     font-size: 1em;
     cursor: pointer;
-  }
-  
-  .selectYear select:focus {
-    outline: 1px solid #1e1e1e;
-  }
+}
 
-  .editData, .addData{
+.selectYear select:focus {
+    outline: 1px solid #1e1e1e;
+}
+
+.editData,
+.addData {
     width: 600px;
     display: flex;
     flex-flow: column;
-  }
+}
 
-  .selectBox, .Input {
+.selectBox,
+.Input {
     display: block;
     margin: 0 0 20px;
     position: relative;
@@ -143,25 +164,25 @@
     font-size: 1rem;
     font-family: 'JetBrains Mono', monospace;
     padding: 0 12px;
-  }
-  
-  .selectBox::before,
-  .selectBox::after {
+}
+
+.selectBox::before,
+.selectBox::after {
     position: absolute;
     content: '';
     pointer-events: none;
-  }
-  
-  .selectBox::before {
+}
+
+.selectBox::before {
     display: inline-block;
     right: 0;
     width: 2.8em;
     height: 2.8em;
     border-radius: 0;
     background-color: #2589d0;
-  }
-  
-  .selectBox::after {
+}
+
+.selectBox::after {
     position: absolute;
     top: 50%;
     right: 1.4em;
@@ -170,9 +191,9 @@
     height: 6px;
     border-bottom: 3px solid #fff;
     border-right: 3px solid #fff;
-  }
-  
-  .selectBox select {
+}
+
+.selectBox select {
     appearance: none;
     min-width: 230px;
     height: 2.8em;
@@ -183,10 +204,24 @@
     color: #333;
     font-size: 1em;
     cursor: pointer;
-  }
-  
-  .selectBox select:focus {
+}
+
+.selectBox select:focus {
     outline: 2px solid #2589d0;
-  }
+}
 
+.loginInput {
+    width: 280px;
+    border: 2px solid #1e1e1e;
+}
 
+.loginSubmit {
+    display: block;
+    width: 100%;
+    margin: 20px auto 0;
+}
+
+.registerTitle{
+    font-size: 2.5rem;
+    text-align: center;
+}

@@ -1,37 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getEconomicDataById, updateEconomicData } from '../api/data';
+import { getSocialSupportDataById, updateSocialSupportData } from '../api/data';
 import useFormData from '../hooks/useFormData';
 import useSubmitForm from '../hooks/useSubmitForm';
 import useFetchCountryRegions from '../hooks/useFetchCountryRegions';
 import useFetchYears from '../hooks/useFetchYears';
 import CategoryDataForm from './common/CategoryDataForm';
 
-const EditEconomicDataForm = () => {
-    const { economicDataId } = useParams();
+const EditSocialSupportDataForm = () => {
+    const { socialSupportDataId } = useParams();
     const { countryRegions } = useFetchCountryRegions();
     const { years } = useFetchYears();
-    const { value: gdp, setValue: setGdp, validateValue, error: gdpError } = useFormData('', 'number');
+    const { value: socialSupport, setValue: setSocialSupport, validateValue, error: socialSupportError } = useFormData('', 'number');
     const [selectedCountryRegionId, setSelectedCountryRegionId] = useState('');
     const [selectedYearId, setSelectedYearId] = useState('');
 
     const { handleSubmit, error: submitError } = useSubmitForm(async (payload) => {
-        await updateEconomicData(economicDataId, payload);
-    }, '/economic-data');
+        await updateSocialSupportData(socialSupportDataId, payload);
+    }, '/socialsupport-data');
 
     useEffect(() => {
-        const fetchEconomicData = async () => {
+        const fetchSocialSupportData = async () => {
             try {
-                const data = await getEconomicDataById(economicDataId);
-                setGdp(data.gdp);
+                const data = await getSocialSupportDataById(socialSupportDataId);
+                setSocialSupport(data.social_support);
                 setSelectedCountryRegionId(data.country_region.id);
                 setSelectedYearId(data.year.id);
             } catch (error) {
-                console.error("Error fetching economic data:", error);
+                console.error("Error fetching social support data:", error);
             }
         };
-        fetchEconomicData();
-    }, [economicDataId]);
+        fetchSocialSupportData();
+    }, [socialSupportDataId]);
 
     const handleCountryRegionChange = (e) => {
         setSelectedCountryRegionId(e.target.value);
@@ -49,17 +49,17 @@ const EditEconomicDataForm = () => {
         const payload = {
             country_region_id: selectedCountryRegionId,
             year_id: selectedYearId,
-            gdp: gdp
+            social_support: socialSupport
         };
         await handleSubmit(payload);
     };
 
     return (
         <CategoryDataForm
-            title="Edit Economic Data"
-            dataValue={gdp}
-            setDataValue={setGdp}
-            dataLabel="GDP"
+            title="Edit Social Support Data"
+            dataValue={socialSupport}
+            setDataValue={setSocialSupport}
+            dataLabel="Social Support"
             handleSubmit={handleFormSubmit}
             countryRegions={countryRegions}
             selectedCountryRegionId={selectedCountryRegionId}
@@ -67,7 +67,7 @@ const EditEconomicDataForm = () => {
             years={years}
             selectedYearId={selectedYearId}
             setSelectedYearId={setSelectedYearId}
-            error={gdpError || submitError}
+            error={socialSupportError || submitError}
             formType="edit"
             handleCountryRegionChange={handleCountryRegionChange}
             handleYearChange={handleYearChange}
@@ -75,4 +75,4 @@ const EditEconomicDataForm = () => {
     );
 };
 
-export default EditEconomicDataForm;
+export default EditSocialSupportDataForm;

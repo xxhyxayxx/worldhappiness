@@ -1,60 +1,71 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getCountryById, updateCountry, getRegions } from '../api/data';
+import { getCountryById, updateCountry } from '../api/data';
+import styles from '../styles/Data.module.css';
+import useFormData from '../hooks/useFormData';
+import useSubmitForm from '../hooks/useSubmitForm';
+import useFetchRegions from '../hooks/useFetchRegions';
 
 const EditCountryForm = () => {
-  const [name, setName] = useState('');
-  const [regions, setRegions] = useState([]);
-  const [selectedRegion, setSelectedRegion] = useState('');
   const { countryId } = useParams();
   const navigate = useNavigate();
+  const { regions, selectedRegionId, setSelectedRegionId } = useFetchRegions();
+  const { value: name, setValue: setName, validateValue, error: nameError } = useFormData('', 'text');
+
+  const { handleSubmit, error: submitError } = useSubmitForm(async (payload) => {
+    await updateCountry(countryId, payload);
+  }, '/countries');
 
   useEffect(() => {
-    const fetchCountryAndRegions = async () => {
+    const fetchCountryData = async () => {
       try {
         const countryData = await getCountryById(countryId);
         setName(countryData.name);
-        setSelectedRegion(countryData.region);
-
-        const regionsData = await getRegions();
-        setRegions(regionsData);
+        setSelectedRegionId(countryData.region.id);
       } catch (error) {
-        // エラー処理
+        console.error('Error fetching regions:', error);
       }
     };
-    fetchCountryAndRegions();
-  }, [countryId]);
+    fetchCountryData();
+  }, [countryId, setName, setSelectedRegionId]);
 
-  const handleSubmit = async (event) => {
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
-    try {
-      await updateCountry(countryId, { name, region: selectedRegion });
-      navigate('/countries');
-    } catch (error) {
-      // エラー処理
+    if (!validateValue() || !selectedRegionId) {
+      return;
     }
+    const payload = {
+      name,
+      region_id: selectedRegionId
+    };
+    await handleSubmit(payload);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Country name"
-      />
-      <select
-        value={selectedRegion}
-        onChange={(e) => setSelectedRegion(e.target.value)}
-      >
-        {regions.map((region) => (
-          <option key={region.id} value={region.id}>
-            {region.name}
-          </option>
-        ))}
-      </select>
-      <button type="submit">Update Country</button>
-    </form>
+    <div className={styles.addBox}>
+      <h1 className={styles.dataTitle}>Edit Country Data</h1>
+      {nameError && <p className={styles.error}>{nameError}</p>}
+      {submitError && <p className={styles.error}>{submitError}</p>}
+      <form onSubmit={handleFormSubmit} className={styles.addData}>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Country name"
+          className={styles.Input}
+        />
+        <select
+          value={selectedRegionId}
+          onChange={(e) => setSelectedRegionId(e.target.value)}
+          className={styles.selectBox}
+        >
+          {regions.map((region) => (
+            <option key={region.id} value={region.id}>{region.name}</option>
+          ))}
+        </select>
+        <button type="submit">Update Country</button>
+      </form>
+    </div>
   );
 };
 

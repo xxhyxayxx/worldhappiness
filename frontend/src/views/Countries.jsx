@@ -1,48 +1,35 @@
-import { useEffect, useState } from 'react';
 import { getCountries, deleteCountry } from '../api/data';
 import { Link } from 'react-router-dom';
 import styles from '../styles/Data.module.css';
+import useDataList from '../hooks/useDataList'; // Assuming similar to useDataList in EconomicDataList
+import useDeleteData from '../hooks/useDeleteData'; // Reusing or creating similar hook
+import DataList from './common/DataList'; // Reusing or creating a common DataList component
 
 const Countries = () => {
-    const [countries, setCountries] = useState([]);
+    const { dataList: countries, setDataList } = useDataList(getCountries);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            let data = await getCountries();
-            // 国名でソート
-            data.sort((a, b) => a.name.localeCompare(b.name));
-            setCountries(data);
-        };
-        fetchData();
-    }, []);
+    const deleteData = useDeleteData();
 
     const handleDelete = async (countryId) => {
-        // ユーザーに削除確認を求める
-        if (window.confirm('Are you sure you want to delete this country?')) {
-            try {
-                await deleteCountry(countryId);
-                // 削除後、国のリストを再取得して更新
-                const data = await getCountries();
-                setCountries(data);
-            } catch (error) {
-                // エラー処理
-            }
-        }
+        await deleteData(deleteCountry, countryId, (id) => {
+            const updatedCountries = countries.filter(country => country.id !== id);
+            setDataList(updatedCountries);
+        });
     };
+
+    const renderListItem = (country) => (
+        <>
+            <p className={styles.dataName}>{country.name}</p>
+            <Link to={`/edit-country/${country.id}`} className={styles.editButton}>Edit</Link>
+            <button onClick={() => handleDelete(country.id)} className={styles.deleteButton}>Delete</button>
+        </>
+    );
 
     return (
         <div className={styles.dataBox}>
             <h1 className={styles.dataTitle}>Countries</h1>
             <Link to="/add-country" className={styles.addDataButton}>Add New Country</Link>
-            <ul className={styles.coutryDataList}>
-                {countries.map(country => (
-                    <li key={country.id} className={styles.countryListItem}>
-                        <p className={styles.dataName}>{country.name}</p>
-                        <Link to={`/edit-country/${country.id}`} className={styles.editButton}>Edit</Link>
-                        <button onClick={() => handleDelete(country.id)} className={styles.deleteButton}>Delete</button>
-                    </li>
-                ))}
-            </ul>
+            <DataList data={countries} renderItem={renderListItem} />
         </div>
     );
 };

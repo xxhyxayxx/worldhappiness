@@ -56,3 +56,8 @@ class SocialSupportDataViewSet(viewsets.ModelViewSet):
     queryset = SocialSupportData.objects.all()
     serializer_class = SocialSupportDataSerializer
     permission_classes = [IsAuthenticated]
+
+class HealthDataViewSet(viewsets.ModelViewSet):
+    queryset = SocialSupportData.objects.all()
+    serializer_class = SocialSupportDataSerializer
+    permission_classes = [IsAuthenticated]

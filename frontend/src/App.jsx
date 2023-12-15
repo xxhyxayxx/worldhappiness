@@ -13,6 +13,8 @@ import EconomicDataList from './views/EconomicDataList';
 import AddEconomicDataForm from './views/AddEconomicDataForm';
 import EditEconomicDataForm from './views/EditEconomicDataForm';
 import SocialSupportDataList from './views/SocialSupportDataList';
+import AddSocialSupportDataForm from './views/AddSocialSupportDataForm';
+import EditSocialSupportDataForm from './views/EditSocialSupportDataForm';
 import Header from './views/common/Header';
 
 
@@ -43,6 +45,8 @@ function App() {
                     <Route path="/edit-economic-data/:economicDataId" element={<EditEconomicDataForm />} />
 
                     <Route path="/socialsupport-data" element={<SocialSupportDataList />} />
+                    <Route path="/add-socialsupport-data" element={<AddSocialSupportDataForm />} />
+                    <Route path="/edit-socialsupport-data/:socialSupportDataId" element={<EditSocialSupportDataForm />} />
                 </Routes>
             </MainWrapper>
         </BrowserRouter>
