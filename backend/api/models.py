@@ -21,7 +21,7 @@ class Year(models.Model):
     year = models.IntegerField()
     
     def __str__(self):
-        return self.name
+        return str(self.year)
 
 class EconomicData(models.Model):
     country_region = models.ForeignKey(CountryRegion, on_delete=models.CASCADE, null=True)

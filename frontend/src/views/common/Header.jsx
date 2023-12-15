@@ -16,6 +16,7 @@ const Header = () => {
               <li className={styles.subNavItem}><Link to="/countries">Countries</Link></li>
               <li className={styles.subNavItem}><Link to="/economic-data">Economic</Link></li>
               <li className={styles.subNavItem}><Link to="/socialsupport-data">Social Support</Link></li>
+              <li className={styles.subNavItem}><Link to="/health-data">Health</Link></li>
               <li className={styles.subNavItem}><Link to="/logout">Logout</Link></li>
             </ul>
           ) : (

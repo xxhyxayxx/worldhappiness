@@ -1,16 +1,16 @@
 import React from 'react';
-import { addEconomicData } from '../api/data';
+import { addHealthData } from '../api/data';
 import useFormData from '../hooks/useFormData';
 import useSubmitForm from '../hooks/useSubmitForm';
 import useFetchCountryRegions from '../hooks/useFetchCountryRegions';
 import useFetchYears from '../hooks/useFetchYears';
 import CategoryDataForm from './common/CategoryDataForm';
 
-const AddEconomicDataForm = () => {
-    const { value: gdp, setValue: setGdp, validateValue, error: gdpError } = useFormData('', 'number');
+const AddHealthDataForm = () => {
+    const { value: life_expectancy, setValue: setHealth, validateValue, error: healthError } = useFormData('', 'number');
     const { handleSubmit, error: submitError } = useSubmitForm(async (payload) => {
-        await addEconomicData(payload);
-    }, '/economic-data');
+        await addHealthData(payload);
+    }, '/health-data');
 
     const { countryRegions, selectedCountryRegionId, setSelectedCountryRegionId } = useFetchCountryRegions();
     const { years, selectedYearId, setSelectedYearId } = useFetchYears();
@@ -31,17 +31,17 @@ const AddEconomicDataForm = () => {
         const payload = {
             country_region_id: selectedCountryRegionId,
             year_id: selectedYearId,
-            gdp: gdp
+            life_expectancy: life_expectancy
         };
         await handleSubmit(payload);
     };
 
     return (
         <CategoryDataForm
-            title="Add Economic Data"
-            dataValue={gdp}
-            setDataValue={setGdp}
-            dataLabel="GDP"
+            title="Add Health Data"
+            dataValue={life_expectancy}
+            setDataValue={setHealth}
+            dataLabel="Health"
             handleSubmit={handleFormSubmit}
             countryRegions={countryRegions}
             selectedCountryRegionId={selectedCountryRegionId}
@@ -49,7 +49,7 @@ const AddEconomicDataForm = () => {
             years={years}
             selectedYearId={selectedYearId}
             setSelectedYearId={setSelectedYearId}
-            error={gdpError || submitError}
+            error={healthError || submitError}
             formType="add"
             handleCountryRegionChange={handleCountryRegionChange}
             handleYearChange={handleYearChange}
@@ -57,4 +57,4 @@ const AddEconomicDataForm = () => {
     );
 };
 
-export default AddEconomicDataForm;
+export default AddHealthDataForm;

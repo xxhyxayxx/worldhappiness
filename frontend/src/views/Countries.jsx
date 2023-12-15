@@ -1,12 +1,25 @@
-import { getCountries, deleteCountry } from '../api/data';
+// Countries.jsx
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { getCountries, deleteCountry } from '../api/data';
 import styles from '../styles/Data.module.css';
-import useDataList from '../hooks/useDataList'; // Assuming similar to useDataList in EconomicDataList
-import useDeleteData from '../hooks/useDeleteData'; // Reusing or creating similar hook
-import DataList from './common/DataList'; // Reusing or creating a common DataList component
+import useDataList from '../hooks/useDataList'; 
+import DataList from './common/DataList'; 
+import useDeleteData from '../hooks/useDeleteData'; 
+import { useLocation } from 'react-router-dom';
 
 const Countries = () => {
     const { dataList: countries, setDataList } = useDataList(getCountries);
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.state?.refresh) {
+          (async () => {
+            const updatedCountries = await getCountries();
+            setDataList(updatedCountries);
+          })();
+        }
+      }, [location.state]);
 
     const deleteData = useDeleteData();
 

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from .models import Country, Region, Year, CountryRegion, EconomicData, SocialSupportData, HealthData
+from .models import Country, Region, Year, CountryRegion, EconomicData, SocialSupportData, HealthData, HappinessScore
 
 class WorldHappinessTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -39,7 +39,13 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return user
 
+class RegionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = ['id', 'name']  # 必要に応じてフィールドを調整
+
 class CountrySerializer(serializers.ModelSerializer):
+    region = RegionSerializer(read_only=True)  # 追加: 読み取り用
     region_id = serializers.PrimaryKeyRelatedField(
         write_only=True,
         queryset=Region.objects.all(),
@@ -48,23 +54,28 @@ class CountrySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Country
-        fields = ['id', 'name', 'region_id']
+        fields = ['id', 'name', 'region', 'region_id']
 
     def create(self, validated_data):
-        # validated_data から region を取得
         region = validated_data.pop('region', None)
         country = Country.objects.create(**validated_data)
-        
+
         if region:
-            # 選択されたリージョンを使って CountryRegion インスタンスを作成
             CountryRegion.objects.create(country=country, region=region)
-        
+
         return country
 
-class RegionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Region
-        fields = ['id', 'name']  # 必要に応じてフィールドを調整
+    def update(self, instance, validated_data):
+        region = validated_data.get('region', None)
+
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+
+        if region:
+            # CountryRegion インスタンスを更新するか、存在しない場合は作成する
+            CountryRegion.objects.update_or_create(country=instance, defaults={'region': region})
+
+        return instance
 
 class YearSerializer(serializers.ModelSerializer):
     class Meta:
@@ -155,6 +166,29 @@ class HealthDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HealthData
+        fields = '__all__' 
+        extra_kwargs = {
+            'country_region': {'read_only': True},
+            'year': {'read_only': True}
+        }
+
+class HappinessScoreSerializer(serializers.ModelSerializer):
+    country_region = CountryRegionSerializer(read_only=True)
+    year = YearSerializer(read_only=True)
+
+    country_region_id = serializers.PrimaryKeyRelatedField(
+        write_only=True,
+        queryset=CountryRegion.objects.all(),
+        source='country_region'
+    )
+    year_id = serializers.PrimaryKeyRelatedField(
+        write_only=True,
+        queryset=Year.objects.all(),
+        source='year'
+    )
+
+    class Meta:
+        model = HappinessScore
         fields = '__all__' 
         extra_kwargs = {
             'country_region': {'read_only': True},

@@ -1,3 +1,4 @@
+import React from 'react';
 import { addSocialSupportData } from '../api/data';
 import useFormData from '../hooks/useFormData';
 import useSubmitForm from '../hooks/useSubmitForm';
@@ -13,6 +14,14 @@ const AddSocialSupportDataForm = () => {
 
     const { countryRegions, selectedCountryRegionId, setSelectedCountryRegionId } = useFetchCountryRegions();
     const { years, selectedYearId, setSelectedYearId } = useFetchYears();
+
+    const handleCountryRegionChange = (e) => {
+        setSelectedCountryRegionId(e.target.value);
+    };
+
+    const handleYearChange = (e) => {
+        setSelectedYearId(e.target.value);
+    };
 
     const handleFormSubmit = async (event) => {
         event.preventDefault();
@@ -42,6 +51,8 @@ const AddSocialSupportDataForm = () => {
             setSelectedYearId={setSelectedYearId}
             error={socialSupportError || submitError}
             formType="add"
+            handleCountryRegionChange={handleCountryRegionChange}
+            handleYearChange={handleYearChange}
         />
     );
 };

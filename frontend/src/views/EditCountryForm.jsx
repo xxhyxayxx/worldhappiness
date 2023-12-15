@@ -7,66 +7,78 @@ import useSubmitForm from '../hooks/useSubmitForm';
 import useFetchRegions from '../hooks/useFetchRegions';
 
 const EditCountryForm = () => {
-  const { countryId } = useParams();
-  const navigate = useNavigate();
-  const { regions, selectedRegionId, setSelectedRegionId } = useFetchRegions();
-  const { value: name, setValue: setName, validateValue, error: nameError } = useFormData('', 'text');
+    const { countryId } = useParams();
+    const navigate = useNavigate();
+    const { regions, selectedRegionId, setSelectedRegionId } = useFetchRegions();
+    const { value: name, setValue: setName, validateValue, error: nameError } = useFormData('', 'text');
 
-  const { handleSubmit, error: submitError } = useSubmitForm(async (payload) => {
-    await updateCountry(countryId, payload);
-  }, '/countries');
-
-  useEffect(() => {
-    const fetchCountryData = async () => {
-      try {
-        const countryData = await getCountryById(countryId);
-        setName(countryData.name);
-        setSelectedRegionId(countryData.region.id);
-      } catch (error) {
-        console.error('Error fetching regions:', error);
-      }
+    const handleSubmitSuccess = () => {
+        navigate('/countries', { state: { refresh: true } });
     };
-    fetchCountryData();
-  }, [countryId, setName, setSelectedRegionId]);
 
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
-    if (!validateValue() || !selectedRegionId) {
-      return;
-    }
-    const payload = {
-      name,
-      region_id: selectedRegionId
+    const { handleSubmit, error: submitError } = useSubmitForm(async (payload) => {
+        await updateCountry(countryId, payload);
+        handleSubmitSuccess();
+    }, '/countries');
+
+    useEffect(() => {
+        const fetchCountryData = async () => {
+            try {
+                const countryData = await getCountryById(countryId);
+                setName(countryData.name);
+                if (countryData.region) {
+                    console.log(countryData.region); 
+                    setSelectedRegionId(countryData.region.id);
+                } else {
+                    console.log('Region data is not available for this country');
+                    setSelectedRegionId('');  // region がない場合は空文字列を設定
+                }
+            } catch (error) {
+                console.error('Error fetching regions:', error);
+            }
+        };
+        fetchCountryData();
+    }, [countryId, setName, setSelectedRegionId]);
+    
+
+    const handleFormSubmit = async (event) => {
+        event.preventDefault();
+        if (!validateValue() || !selectedRegionId) {
+            return;
+        }
+        const payload = {
+            name,
+            region_id: selectedRegionId
+        };
+        await handleSubmit(payload);
     };
-    await handleSubmit(payload);
-  };
 
-  return (
-    <div className={styles.addBox}>
-      <h1 className={styles.dataTitle}>Edit Country Data</h1>
-      {nameError && <p className={styles.error}>{nameError}</p>}
-      {submitError && <p className={styles.error}>{submitError}</p>}
-      <form onSubmit={handleFormSubmit} className={styles.addData}>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Country name"
-          className={styles.Input}
-        />
-        <select
-          value={selectedRegionId}
-          onChange={(e) => setSelectedRegionId(e.target.value)}
-          className={styles.selectBox}
-        >
-          {regions.map((region) => (
-            <option key={region.id} value={region.id}>{region.name}</option>
-          ))}
-        </select>
-        <button type="submit">Update Country</button>
-      </form>
-    </div>
-  );
+    return (
+        <div className={styles.addBox}>
+            <h1 className={styles.dataTitle}>Edit Country Data</h1>
+            {nameError && <p className={styles.error}>{nameError}</p>}
+            {submitError && <p className={styles.error}>{submitError}</p>}
+            <form onSubmit={handleFormSubmit} className={styles.addData}>
+                <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Country name"
+                    className={styles.Input}
+                />
+                <select
+                    value={selectedRegionId}
+                    onChange={(e) => setSelectedRegionId(e.target.value)}
+                    className={styles.selectBox}
+                >
+                    {regions.map((region) => (
+                        <option key={region.id} value={region.id}>{region.name}</option>
+                    ))}
+                </select>
+                <button type="submit">Update Country</button>
+            </form>
+        </div>
+    );
 };
 
 export default EditCountryForm;

@@ -16,6 +16,9 @@ import SocialSupportDataList from './views/SocialSupportDataList';
 import AddSocialSupportDataForm from './views/AddSocialSupportDataForm';
 import EditSocialSupportDataForm from './views/EditSocialSupportDataForm';
 import Header from './views/common/Header';
+import HealthDataList from './views/HealthDataList';
+import AddHealthDataForm from './views/AddHealthDataForm';
+import EditHealthDataForm from './views/EditHealthDataForm';
 
 
 function App() {
@@ -47,6 +50,10 @@ function App() {
                     <Route path="/socialsupport-data" element={<SocialSupportDataList />} />
                     <Route path="/add-socialsupport-data" element={<AddSocialSupportDataForm />} />
                     <Route path="/edit-socialsupport-data/:socialSupportDataId" element={<EditSocialSupportDataForm />} />
+
+                    <Route path="/health-data" element={<HealthDataList />} />
+                    <Route path="/add-health-data" element={<AddHealthDataForm />} />
+                    <Route path="/edit-health-data/:healthDataId" element={<EditHealthDataForm />} />
                 </Routes>
             </MainWrapper>
         </BrowserRouter>
