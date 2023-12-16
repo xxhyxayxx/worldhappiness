@@ -24,7 +24,7 @@ const AddCountryForm = () => {
         }
         const payload = {
             name,
-            region_id: selectedRegionId
+            region_id: parseInt(selectedRegionId, 10)
         };
         await handleSubmit(payload);
     };

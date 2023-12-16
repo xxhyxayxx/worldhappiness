@@ -26,9 +26,9 @@ const EditCountryForm = () => {
             try {
                 const countryData = await getCountryById(countryId);
                 setName(countryData.name);
-                if (countryData.region) {
-                    console.log(countryData.region); 
-                    setSelectedRegionId(countryData.region.id);
+                if (countryData.regions && countryData.regions.length > 0) {
+                    console.log(countryData.regions); 
+                    setSelectedRegionId(countryData.regions[0].id); // 最初のリージョンのIDを取得
                 } else {
                     console.log('Region data is not available for this country');
                     setSelectedRegionId('');  // region がない場合は空文字列を設定
@@ -38,7 +38,7 @@ const EditCountryForm = () => {
             }
         };
         fetchCountryData();
-    }, [countryId, setName, setSelectedRegionId]);
+    }, [countryId, setName, setSelectedRegionId]);    
     
 
     const handleFormSubmit = async (event) => {

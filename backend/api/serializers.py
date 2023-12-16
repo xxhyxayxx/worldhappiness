@@ -4,6 +4,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from .models import Country, Region, Year, CountryRegion, EconomicData, SocialSupportData, HealthData, HappinessScore
+from django.core.exceptions import ObjectDoesNotExist
 
 class WorldHappinessTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -44,38 +45,52 @@ class RegionSerializer(serializers.ModelSerializer):
         model = Region
         fields = ['id', 'name']  # 必要に応じてフィールドを調整
 
-class CountrySerializer(serializers.ModelSerializer):
-    region = RegionSerializer(read_only=True)  # 追加: 読み取り用
-    region_id = serializers.PrimaryKeyRelatedField(
-        write_only=True,
-        queryset=Region.objects.all(),
-        source='region'
-    )
+from rest_framework import serializers
+from .models import Country, Region, CountryRegion
 
+class RegionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Country
-        fields = ['id', 'name', 'region', 'region_id']
+        model = Region
+        fields = ['id', 'name']
+
+class CountrySerializer(serializers.ModelSerializer):
+    regions = RegionSerializer(many=True, read_only=True)
+    region_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
 
     def create(self, validated_data):
-        region = validated_data.pop('region', None)
+        region_id = validated_data.pop('region_id', None)
         country = Country.objects.create(**validated_data)
 
-        if region:
-            CountryRegion.objects.create(country=country, region=region)
+        if region_id is not None:
+            try:
+                region = Region.objects.get(id=region_id)
+                country.regions.add(region)
+            except Region.DoesNotExist:
+                raise serializers.ValidationError({'region_id': 'This region does not exist.'})
 
         return country
 
     def update(self, instance, validated_data):
-        region = validated_data.get('region', None)
-
         instance.name = validated_data.get('name', instance.name)
         instance.save()
 
-        if region:
-            # CountryRegion インスタンスを更新するか、存在しない場合は作成する
-            CountryRegion.objects.update_or_create(country=instance, defaults={'region': region})
+        region_id = validated_data.get('region_id')
+        if region_id is not None:
+            # 既存のリージョン関連をクリア
+            instance.regions.clear()
+            try:
+                region = Region.objects.get(id=region_id)
+                instance.regions.add(region)
+            except Region.DoesNotExist:
+                raise serializers.ValidationError({'region_id': 'This region does not exist.'})
 
         return instance
+
+    class Meta:
+        model = Country
+        fields = ['id', 'name', 'regions', 'region_id']
+
+
 
 class YearSerializer(serializers.ModelSerializer):
     class Meta:

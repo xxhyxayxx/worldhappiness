@@ -28,7 +28,7 @@ def getRoutes(request):
     return Response(routes)
 
 class CountryViewSet(viewsets.ModelViewSet):
-    queryset = Country.objects.all()
+    queryset = Country.objects.all().prefetch_related('regions')
     serializer_class = CountrySerializer
     permission_classes = [IsAuthenticated]
 
