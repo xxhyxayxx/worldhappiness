@@ -51,7 +51,7 @@ const HappinessScoreList = () => {
             setSelectedYear={setSelectedYear}
             years={years}
             chartData={chartData}
-            chartLabel={`Health in ${selectedYear}`}
+            chartLabel={`Happiness Score in ${selectedYear}`}
             chartColor='rgba(255, 20, 147, 0.5)'
         >
             <DataList data={filteredHappinessScore} renderItem={renderListItem} />

@@ -36,23 +36,34 @@ const AddEconomicDataForm = () => {
         await handleSubmit(payload);
     };
 
+    const inputs = [
+        {
+            type: 'select',
+            value: selectedCountryRegionId,
+            onChange: handleCountryRegionChange,
+            options: countryRegions.map(cr => ({ value: cr.id, label: `${cr.country} - ${cr.region}` })),
+        },
+        {
+            type: 'select',
+            value: selectedYearId,
+            onChange: handleYearChange,
+            options: years.map(year => ({ value: year.id, label: year.year })),
+        },
+        {
+            type: 'number',
+            value: gdp,
+            onChange: (e) => setGdp(e.target.value),
+            placeholder: 'GDP',
+        }
+    ];
+
     return (
         <CategoryDataForm
             title="Add Economic Data"
-            dataValue={gdp}
-            setDataValue={setGdp}
-            dataLabel="GDP"
             handleSubmit={handleFormSubmit}
-            countryRegions={countryRegions}
-            selectedCountryRegionId={selectedCountryRegionId}
-            setSelectedCountryRegionId={setSelectedCountryRegionId}
-            years={years}
-            selectedYearId={selectedYearId}
-            setSelectedYearId={setSelectedYearId}
+            inputs={inputs}
+            buttonText="Add"
             error={gdpError || submitError}
-            formType="add"
-            handleCountryRegionChange={handleCountryRegionChange}
-            handleYearChange={handleYearChange}
         />
     );
 };

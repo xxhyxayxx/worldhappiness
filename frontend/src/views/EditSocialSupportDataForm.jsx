@@ -54,23 +54,34 @@ const EditSocialSupportDataForm = () => {
         await handleSubmit(payload);
     };
 
+    const inputs = [
+        {
+            type: 'select',
+            value: selectedCountryRegionId,
+            onChange: handleCountryRegionChange,
+            options: countryRegions.map(cr => ({ value: cr.id, label: `${cr.country} - ${cr.region}` })),
+        },
+        {
+            type: 'select',
+            value: selectedYearId,
+            onChange: handleYearChange,
+            options: years.map(year => ({ value: year.id, label: year.year })),
+        },
+        {
+            type: 'number',
+            value: socialSupport,
+            onChange: (e) => setSocialSupport(e.target.value),
+            placeholder: 'Social Support',
+        }
+    ];
+
     return (
         <CategoryDataForm
             title="Edit Social Support Data"
-            dataValue={socialSupport}
-            setDataValue={setSocialSupport}
-            dataLabel="Social Support"
             handleSubmit={handleFormSubmit}
-            countryRegions={countryRegions}
-            selectedCountryRegionId={selectedCountryRegionId}
-            setSelectedCountryRegionId={setSelectedCountryRegionId}
-            years={years}
-            selectedYearId={selectedYearId}
-            setSelectedYearId={setSelectedYearId}
+            inputs={inputs}
+            buttonText="Update"
             error={socialSupportError || submitError}
-            formType="edit"
-            handleCountryRegionChange={handleCountryRegionChange}
-            handleYearChange={handleYearChange}
         />
     );
 };
