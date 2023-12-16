@@ -23,38 +23,38 @@ class Year(models.Model):
     def __str__(self):
         return str(self.year)
 
-class EconomicData(models.Model):
+# 共通のフィールドを持つ抽象基底クラスを作成
+class CommonFields(models.Model):
     country_region = models.ForeignKey(CountryRegion, on_delete=models.CASCADE, null=True)
     year = models.ForeignKey(Year, on_delete=models.CASCADE)
-    gdp = models.DecimalField(max_digits=10, decimal_places=3)
     
-class SocialSupportData(models.Model):
-    country_region = models.ForeignKey(CountryRegion, on_delete=models.CASCADE, null=True)
-    year = models.ForeignKey(Year, on_delete=models.CASCADE)
+    class Meta:
+        abstract = True  # このクラスを抽象基底クラスとしてマーク
+
+# EconomicData モデル
+class EconomicData(CommonFields):
+    gdp = models.DecimalField(max_digits=10, decimal_places=3)
+
+# SocialSupportData モデル
+class SocialSupportData(CommonFields):
     social_support = models.DecimalField(max_digits=10, decimal_places=3)
 
-class HealthData(models.Model):
-    country_region = models.ForeignKey(CountryRegion, on_delete=models.CASCADE, null=True)
-    year = models.ForeignKey(Year, on_delete=models.CASCADE)
+# HealthData モデル
+class HealthData(CommonFields):
     life_expectancy = models.DecimalField(max_digits=10, decimal_places=3)
 
-class FreedomData(models.Model):
-    country_region = models.ForeignKey(CountryRegion, on_delete=models.CASCADE, null=True)
-    year = models.ForeignKey(Year, on_delete=models.CASCADE)
+# FreedomData モデル
+class FreedomData(CommonFields):
     freedom = models.DecimalField(max_digits=10, decimal_places=3)
 
-class GenerosityData(models.Model):
-    country_region = models.ForeignKey(CountryRegion, on_delete=models.CASCADE, null=True)
-    year = models.ForeignKey(Year, on_delete=models.CASCADE)
+# GenerosityData モデル
+class GenerosityData(CommonFields):
     generosity = models.DecimalField(max_digits=10, decimal_places=3)
 
-class GovernmentTrustData(models.Model):
-    country_region = models.ForeignKey(CountryRegion, on_delete=models.CASCADE, null=True)
-    year = models.ForeignKey(Year, on_delete=models.CASCADE)
+# GovernmentTrustData モデル
+class GovernmentTrustData(CommonFields):
     government_trust = models.DecimalField(max_digits=10, decimal_places=3)
 
-class HappinessScore(models.Model):
-    country_region = models.ForeignKey(CountryRegion, on_delete=models.CASCADE, null=True)
-    year = models.ForeignKey(Year, on_delete=models.CASCADE)
+# HappinessScore モデル
+class HappinessScore(CommonFields):
     happiness_score = models.DecimalField(max_digits=10, decimal_places=3)
-
