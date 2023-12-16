@@ -19,7 +19,9 @@ import Header from './views/common/Header';
 import HealthDataList from './views/HealthDataList';
 import AddHealthDataForm from './views/AddHealthDataForm';
 import EditHealthDataForm from './views/EditHealthDataForm';
-
+import HappinessScoreList from './views/HappinessScoreList';
+import AddHappinessScoreForm from './views/AddHappinessScoreForm';
+import EditHappinessScoreForm from './views/EditHappinessScoreForm';
 
 function App() {
     return (
@@ -54,6 +56,10 @@ function App() {
                     <Route path="/health-data" element={<HealthDataList />} />
                     <Route path="/add-health-data" element={<AddHealthDataForm />} />
                     <Route path="/edit-health-data/:healthDataId" element={<EditHealthDataForm />} />
+
+                    <Route path="/happinessscore-data" element={<HappinessScoreList />} />
+                    <Route path="/add-happinessscore-data" element={<AddHappinessScoreForm />} />
+                    <Route path="/edit-happinessscore-data/:happinessScoreId" element={<EditHappinessScoreForm />} />
                 </Routes>
             </MainWrapper>
         </BrowserRouter>

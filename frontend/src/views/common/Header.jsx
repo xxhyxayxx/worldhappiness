@@ -14,6 +14,7 @@ const Header = () => {
           {isLoggedIn ? (
             <ul className={styles.subNav}>
               <li className={styles.subNavItem}><Link to="/countries">Countries</Link></li>
+              <li className={styles.subNavItem}><Link to="/happinessscore-data">Happiness Score</Link></li>
               <li className={styles.subNavItem}><Link to="/economic-data">Economic</Link></li>
               <li className={styles.subNavItem}><Link to="/socialsupport-data">Social Support</Link></li>
               <li className={styles.subNavItem}><Link to="/health-data">Health</Link></li>
