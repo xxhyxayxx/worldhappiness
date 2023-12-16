@@ -6,12 +6,13 @@ from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from decimal import Decimal
 
-class CountryViewSetTestCase(APITestCase):
+class BaseTestCase(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpassword')
         refresh = RefreshToken.for_user(self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
 
+class CountryViewSetTestCase(BaseTestCase):
     def test_create_country(self):
         url = reverse('country-list')
         data = {"name": "Test Country"}
@@ -35,12 +36,7 @@ class CountryViewSetTestCase(APITestCase):
         self.assertEqual(Country.objects.count(), 0)
 
 # RegionViewSetTestCase
-class RegionViewSetTestCase(APITestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
-        refresh = RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
-
+class RegionViewSetTestCase(BaseTestCase):
     def test_create_region(self):
         url = reverse('region-list')
         data = {"name": "Test Region"}
@@ -72,12 +68,9 @@ class RegionViewSetTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Region.objects.count(), 0)
 
-class CountryRegionViewSetTestCase(APITestCase):
+class CountryRegionViewSetTestCase(BaseTestCase):
     def setUp(self):
         super().setUp()
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
-        refresh = RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
         # Country と Region インスタンスを作成
         self.country = Country.objects.create(name="Test Country")
         self.region = Region.objects.create(name="Test Region")
@@ -115,12 +108,7 @@ class CountryRegionViewSetTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(CountryRegion.objects.count(), 0)
 
-class YearViewSetTestCase(APITestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
-        refresh = RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
-
+class YearViewSetTestCase(BaseTestCase):
     def test_create_year(self):
         url = reverse('year-list')
         data = {'year': 2020}
@@ -152,19 +140,16 @@ class YearViewSetTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Year.objects.count(), 0)
 
-class EconomicDataViewSetTestCase(APITestCase):
+class CommonDataTestCase(BaseTestCase):
     def setUp(self):
         super().setUp()
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
-        refresh = RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
-        # Country と Region インスタンスを作成
-        country = Country.objects.create(name="Test Country")
-        region = Region.objects.create(name="Test Region")
-        # CountryRegion インスタンスを作成
-        self.country_region = CountryRegion.objects.create(country=country, region=region)
+        # 共通データのセットアップ
+        self.country = Country.objects.create(name="Test Country")
+        self.region = Region.objects.create(name="Test Region")
+        self.country_region = CountryRegion.objects.create(country=self.country, region=self.region)
         self.year = Year.objects.create(year=2020)
 
+class EconomicDataViewSetTestCase(CommonDataTestCase):
     def test_create_economic_data(self):
         url = reverse('economicdata-list')
         data = {
@@ -201,19 +186,7 @@ class EconomicDataViewSetTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(EconomicData.objects.count(), 0)
 
-class SocialSupportDataViewSetTestCase(APITestCase):
-    def setUp(self):
-        super().setUp()
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
-        refresh = RefreshToken.for_user(self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
-        # Country と Region インスタンスを作成
-        country = Country.objects.create(name="Test Country")
-        region = Region.objects.create(name="Test Region")
-        # CountryRegion インスタンスを作成
-        self.country_region = CountryRegion.objects.create(country=country, region=region)
-        self.year = Year.objects.create(year=2020)
-    
+class SocialSupportDataViewSetTestCase(CommonDataTestCase):    
     def test_create_social_support_data(self):
         url = reverse('socialsupportdata-list')
         data = {
