@@ -1,7 +1,7 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
-from api.models import Region, Country, CountryRegion, Year, EconomicData, SocialSupportData, HealthData
+from api.models import Region, Country, CountryRegion, Year, EconomicData, SocialSupportData, HealthData, FreedomData, HappinessScore, GovernmentTrustData, GenerosityData
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from decimal import Decimal
@@ -212,5 +212,140 @@ class SocialSupportDataViewSetTestCase(CommonDataTestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(SocialSupportData.objects.count(), 0)
+
+class HealthDataViewSetTestCase(CommonDataTestCase):    
+    def test_create_health_data(self):
+        url = reverse('healthdata-list')
+        data = {
+            'country_region_id': self.country_region.id,
+            'year_id': self.year.id,
+            'life_expectancy': 123.45
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(HealthData.objects.count(), 1)
+        self.assertEqual(HealthData.objects.get().life_expectancy, Decimal('123.45'))
+    
+    def test_read_health_data(self):
+        health_data = HealthData.objects.create(country_region=self.country_region, year=self.year, life_expectancy=123.45)
+        url = reverse('healthdata-detail', kwargs={'pk': health_data.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['life_expectancy'], '123.450')
+    
+    def test_delete_health_data(self):
+        health_data = HealthData.objects.create(country_region=self.country_region, year=self.year, life_expectancy=123.45)
+        url = reverse('healthdata-detail', kwargs={'pk': health_data.id})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(SocialSupportData.objects.count(), 0)
+
+class FreedomDataViewSetTestCase(CommonDataTestCase):    
+    def test_create_freedom_data(self):
+        url = reverse('freedomdata-list')
+        data = {
+            'country_region_id': self.country_region.id,
+            'year_id': self.year.id,
+            'freedom': 123.45
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(FreedomData.objects.count(), 1)
+        self.assertEqual(FreedomData.objects.get().freedom, Decimal('123.45'))
+    
+    def test_read_freedom_data(self):
+        freedom_data = FreedomData.objects.create(country_region=self.country_region, year=self.year, freedom=123.45)
+        url = reverse('freedomdata-detail', kwargs={'pk': freedom_data.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['freedom'], '123.450')
+    
+    def test_delete_freedom_data(self):
+        freedom_data = FreedomData.objects.create(country_region=self.country_region, year=self.year, freedom=123.45)
+        url = reverse('freedomdata-detail', kwargs={'pk': freedom_data.id})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(FreedomData.objects.count(), 0)
+
+class HappinessScoreViewSetTestCase(CommonDataTestCase):    
+    def test_create_happiness_score(self):
+        url = reverse('happinessscore-list')
+        data = {
+            'country_region_id': self.country_region.id,
+            'year_id': self.year.id,
+            'happiness_score': 123.45
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(HappinessScore.objects.count(), 1)
+        self.assertEqual(HappinessScore.objects.get().happiness_score, Decimal('123.45'))
+    
+    def test_read_hapiness_score(self):
+        happiness_score = HappinessScore.objects.create(country_region=self.country_region, year=self.year, happiness_score=123.45)
+        url = reverse('happinessscore-detail', kwargs={'pk': happiness_score.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['happiness_score'], '123.450')
+    
+    def test_delete_happiness_score(self):
+        happiness_score = HappinessScore.objects.create(country_region=self.country_region, year=self.year, happiness_score=123.45)
+        url = reverse('happinessscore-detail', kwargs={'pk': happiness_score.id})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(HappinessScore.objects.count(), 0)
+
+class GovernmentTrustDataViewSetTestCase(CommonDataTestCase):    
+    def test_create_government_trust_data(self):
+        url = reverse('governmenttrustdata-list')
+        data = {
+            'country_region_id': self.country_region.id,
+            'year_id': self.year.id,
+            'government_trust': 123.45
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(GovernmentTrustData.objects.count(), 1)
+        self.assertEqual(GovernmentTrustData.objects.get().government_trust, Decimal('123.45'))
+    
+    def test_read_government_trust_data(self):
+        government_trust = GovernmentTrustData.objects.create(country_region=self.country_region, year=self.year, government_trust=123.45)
+        url = reverse('governmenttrustdata-detail', kwargs={'pk': government_trust.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['government_trust'], '123.450')
+    
+    def test_delete_government_trust_data(self):
+        government_trust = GovernmentTrustData.objects.create(country_region=self.country_region, year=self.year, government_trust=123.45)
+        url = reverse('governmenttrustdata-detail', kwargs={'pk': government_trust.id})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(GovernmentTrustData.objects.count(), 0)
+
+class GenerosityDataViewSetTestCase(CommonDataTestCase):    
+    def test_create_generosity_data(self):
+        url = reverse('generositydata-list')
+        data = {
+            'country_region_id': self.country_region.id,
+            'year_id': self.year.id,
+            'generosity': 123.45
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(GenerosityData.objects.count(), 1)
+        self.assertEqual(GenerosityData.objects.get().generosity, Decimal('123.45'))
+    
+    def test_read_generosity_data(self):
+        generosity = GenerosityData.objects.create(country_region=self.country_region, year=self.year, generosity=123.45)
+        url = reverse('generositydata-detail', kwargs={'pk': generosity.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['generosity'], '123.450')
+    
+    def test_delete_generosity_data(self):
+        generosity = GenerosityData.objects.create(country_region=self.country_region, year=self.year, generosity=123.45)
+        url = reverse('generositydata-detail', kwargs={'pk': generosity.id})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(GenerosityData.objects.count(), 0)
     
     
