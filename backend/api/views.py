@@ -9,9 +9,13 @@ from api.serializers import WorldHappinessTokenObtainPairSerializer, RegisterSer
 from .models import Country, Region, CountryRegion, EconomicData, Year, SocialSupportData, HealthData, HappinessScore, FreedomData, GovernmentTrustData, GenerosityData
 from django.shortcuts import render
 
+# WorldHappinessTokenObtainPairView was written with reference to the following site
+# https://sushil-kamble.medium.com/django-rest-framework-react-authentication-workflow-2022-part-1-a21f22b3f358
 class WorldHappinessTokenObtainPairView(TokenObtainPairView):
     serializer_class = WorldHappinessTokenObtainPairSerializer
 
+# RegisterView was written with reference to the following site
+# https://sushil-kamble.medium.com/django-rest-framework-react-authentication-workflow-2022-part-1-a21f22b3f358
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)

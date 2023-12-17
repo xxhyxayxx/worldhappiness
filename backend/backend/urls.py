@@ -23,9 +23,9 @@ from rest_framework.permissions import AllowAny
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="APIドキュメント",
+      title="API Document",
       default_version='v1',
-      description="APIの詳細な説明",
+      description="API",
       terms_of_service="https://www.google.com/policies/terms/",
       contact=openapi.Contact(email="your_email@example.com"),
       license=openapi.License(name="BSD License"),

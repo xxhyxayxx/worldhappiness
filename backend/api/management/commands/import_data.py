@@ -8,15 +8,14 @@ class Command(BaseCommand):
     help = 'Import data from CSV files into the database'
 
     def handle(self, *args, **options):
-        # CSVファイルが保存されているディレクトリのパスを指定
-        csv_directory = 'data/'  # 例: 'data/csv_files/'
+        csv_directory = 'data/'
 
-        # CSVファイルを反復処理
+        # Iterate through CSV files (to handle multiple files)
         for filename in os.listdir(csv_directory):
             if filename.endswith(".csv"):
                 csv_file_path = os.path.join(csv_directory, filename)
 
-                # 正規表現を使用してファイル名から年を抽出
+                # Extract year from file name
                 match = re.search(r'_(\d{4})\.csv', filename)
                 if match:
                     year_value = int(match.group(1))
@@ -25,26 +24,24 @@ class Command(BaseCommand):
                     continue
 
                 if year_value is not None:
-                    # CSVファイルを開いてデータを読み込む
                     with open(csv_file_path, 'r') as csv_file:
                         csv_reader = csv.reader(csv_file)
-                        next(csv_reader)  # ヘッダー行をスキップする場合
+                        next(csv_reader)
 
                         for row in csv_reader:
-                            # CSVファイルからデータを読み込む
-                            country_name = row[0]  # CSVファイルの該当列に国名があると仮定
+                            country_name = row[0] 
 
-                            # 対応するCountryRegionを見つける
+                            # Find the corresponding CountryRegion
                             try:
                                 country_region = CountryRegion.objects.get(country__name=country_name)
                             except CountryRegion.DoesNotExist:
                                 self.stdout.write(self.style.ERROR(f"CountryRegion for {country_name} not found."))
                                 continue
 
-                            # Yearモデルを作成または取得
+                            # Create or retrieve Year models
                             year, created = Year.objects.get_or_create(year=year_value)
 
-                            # 各年のデータを適切なモデルに挿入
+                            # Insert data for each year into the appropriate model
                             EconomicData.objects.create(country_region=country_region, year=year, gdp=row[2])
                             SocialSupportData.objects.create(country_region=country_region, year=year, social_support=row[3])
                             HealthData.objects.create(country_region=country_region, year=year, life_expectancy=row[4])

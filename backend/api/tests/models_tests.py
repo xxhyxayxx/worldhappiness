@@ -1,24 +1,26 @@
 from django.test import TestCase
 from api.models import Country, Region, CountryRegion, Year, EconomicData, SocialSupportData, HealthData, FreedomData, GenerosityData, GovernmentTrustData, HappinessScore
+import random
+from decimal import Decimal
 
 class CountryModelTestCase(TestCase):
     def test_create_country(self):
-        # 新しい国を作成してデータベースに保存
+        # Create a new country and save it to the database
         country = Country.objects.create(name="Test Country")
         
-        # データベースに保存されているか確認
+        # Check that the country is saved in the database
         self.assertEqual(Country.objects.count(), 1)
         
-        # 作成した国の名前を取得して確認
+        # Verify that the name of the created country is correct
         self.assertEqual(country.name, "Test Country")
 
     def test_country_str(self):
-        # 国の文字列表現が正しいか確認
+        # Ensure the string representation of the country is correct
         country = Country.objects.create(name="Test Country")
         self.assertEqual(str(country), "Test Country")
 
     def test_add_region_to_country(self):
-        # 国に関連する地域情報を追加できるか確認
+        # Check if a region can be added to a country
         country = Country.objects.create(name="Test Country")
         region = Region.objects.create(name="Test Region")
         
@@ -29,214 +31,175 @@ class CountryModelTestCase(TestCase):
 
 class RegionModelTestCase(TestCase):
     def test_create_region(self):
-        # 新しい地域を作成してデータベースに保存
+        # Create a new region and save it to the database
         region = Region.objects.create(name="Test Region")
         
-        # データベースに保存されているか確認
+        # Check that the region is saved in the database
         self.assertEqual(Region.objects.count(), 1)
         
-        # 作成した地域の名前を取得して確認
+        # Verify that the name of the created region is correct
         self.assertEqual(region.name, "Test Region")
 
     def test_region_str(self):
-        # 地域の文字列表現が正しいか確認
+        # Ensure the string representation of the region is correct
         region = Region.objects.create(name="Test Region")
         self.assertEqual(str(region), "Test Region")
 
 
 class CountryRegionModelTestCase(TestCase):
     def setUp(self):
-        # テストに使用する Country と Region のインスタンスを作成
+        # Create instances of Country and Region for testing
         self.country = Country.objects.create(name="Test Country")
         self.region = Region.objects.create(name="Test Region")
 
     def test_create_country_region(self):
-        # 新しい CountryRegion を作成してデータベースに保存
+        # Create a new CountryRegion and save it to the database
         country_region = CountryRegion.objects.create(country=self.country, region=self.region)
         
-        # データベースに保存されているか確認
+        # Check that the countryRegion is saved in the database
         self.assertEqual(CountryRegion.objects.count(), 1)
         
-        # 作成した CountryRegion の関連が正しいか確認
+        # Verify that the CountryRegion associations you created are correct
         self.assertEqual(country_region.country, self.country)
         self.assertEqual(country_region.region, self.region)
 
     def test_cascade_deletion(self):
-        # CountryRegion を作成
+        # Create CountryRegion
         country_region = CountryRegion.objects.create(country=self.country, region=self.region)
         
-        # Country を削除
+        # Delet the Country
         self.country.delete()
         
-        # CountryRegion も削除されたか確認
+        # Make sure CountryRegion is also deleted
         self.assertEqual(CountryRegion.objects.count(), 0)
 
 class CommonFieldsModelTestCase(TestCase):
+    def setUp(self):
+        # Create Country and Region
+        self.country = Country.objects.create(name="Test Country")
+        self.region = Region.objects.create(name="Test Region")
+
+        # Create CountryRegion and Year
+        self.country_region = CountryRegion.objects.create(country=self.country, region=self.region)
+        self.year = Year.objects.create(year=random.randint(2000, 2023))
+        
     def test_create_economic_data(self):
-        # CountryとRegionを作成
-        country = Country.objects.create(name="Test Country")
-        region = Region.objects.create(name="Test Region")
-
-        # CountryRegionとYearを作成
-        country_region = CountryRegion.objects.create(country=country, region=region)
-        year = Year.objects.create(year=2023)
-
-        # EconomicDataモデルを作成
+        # Set random values in EconomicData model
+        self.gdp = Decimal(random.uniform(1000, 100000))
+        
+        # Create EconomicData model
         economic_data = EconomicData.objects.create(
-            country_region=country_region,
-            year=year,
-            gdp=12345.678  # ここに適切な値を設定
+            country_region=self.country_region,
+            year=self.year,
+            gdp=self.gdp
         )
 
-        # 作成したEconomicDataがデータベースに保存されているか確認
+        # Check the Economic data is saved in the database
         self.assertEqual(EconomicData.objects.count(), 1)
-
-        # 作成したEconomicDataの関連が正しいか確認
-        self.assertEqual(economic_data.country_region, country_region)
-        self.assertEqual(economic_data.year, year)
-        self.assertEqual(economic_data.gdp, 12345.678) 
-
-    def test_create_social_support_data(self):
-        # CountryとRegionを作成
-        country = Country.objects.create(name="Test Country")
-        region = Region.objects.create(name="Test Region")
-
-        # CountryRegionとYearを作成
-        country_region = CountryRegion.objects.create(country=country, region=region)
-        year = Year.objects.create(year=2023)
-
-        # SocialSupportDataモデルを作成
+        self.assertEqual(economic_data.country_region, self.country_region)
+        self.assertEqual(economic_data.year, self.year)
+        self.assertEqual(economic_data.gdp, self.gdp) 
+    
+    def test_social_support_data(self):
+        # Set random values in Social Support model
+        self.social_support = Decimal(random.uniform(1000, 100000))
+        
+        # Create SocialSupport Data model
         social_support_data = SocialSupportData.objects.create(
-            country_region=country_region,
-            year=year,
-            social_support=0.789  # ここに適切な値を設定
+            country_region=self.country_region,
+            year=self.year,
+            social_support=self.social_support
         )
 
-        # 作成したSocialSupportDataがデータベースに保存されているか確認
+        # Check the Social Support data is saved in the database
         self.assertEqual(SocialSupportData.objects.count(), 1)
-
-        # 作成したSocialSupportDataの関連が正しいか確認
-        self.assertEqual(social_support_data.country_region, country_region)
-        self.assertEqual(social_support_data.year, year)
-        self.assertEqual(social_support_data.social_support, 0.789)
-
-    def test_create_health_data(self):
-        # CountryとRegionを作成
-        country = Country.objects.create(name="Test Country")
-        region = Region.objects.create(name="Test Region")
-
-        # CountryRegionとYearを作成
-        country_region = CountryRegion.objects.create(country=country, region=region)
-        year = Year.objects.create(year=2023)
-
-        # HealthDataモデルを作成
+        self.assertEqual(social_support_data.country_region, self.country_region)
+        self.assertEqual(social_support_data.year, self.year)
+        self.assertEqual(social_support_data.social_support, self.social_support) 
+        
+    def test_health_data(self):
+        # Set random values in Health model
+        self.life_expectancy = Decimal(random.uniform(1000, 100000))
+        
+        # Create Health Data model
         health_data = HealthData.objects.create(
-            country_region=country_region,
-            year=year,
-            life_expectancy=75.6  # ここに適切な値を設定
+            country_region=self.country_region,
+            year=self.year,
+            life_expectancy=self.life_expectancy
         )
 
-        # 作成したHealthDataがデータベースに保存されているか確認
+        # Check the Health data is saved in the database
         self.assertEqual(HealthData.objects.count(), 1)
-
-        # 作成したHealthDataの関連が正しいか確認
-        self.assertEqual(health_data.country_region, country_region)
-        self.assertEqual(health_data.year, year)
-        self.assertEqual(health_data.life_expectancy, 75.6)
-
-    def test_create_freedom_data(self):
-        # CountryとRegionを作成
-        country = Country.objects.create(name="Test Country")
-        region = Region.objects.create(name="Test Region")
-
-        # CountryRegionとYearを作成
-        country_region = CountryRegion.objects.create(country=country, region=region)
-        year = Year.objects.create(year=2023)
-
-        # FreedomDataモデルを作成
-        freedom_data = FreedomData.objects.create(
-            country_region=country_region,
-            year=year,
-            freedom=0.654  # ここに適切な値を設定
+        self.assertEqual(health_data.country_region, self.country_region)
+        self.assertEqual(health_data.year, self.year)
+        self.assertEqual(health_data.life_expectancy, self.life_expectancy) 
+    
+    def test_happiness_score(self):
+        # Set random values in Happiness Score model
+        self.happiness_score = Decimal(random.uniform(1000, 100000))
+        
+        # Create Happiness Score model
+        happiness_score = HappinessScore.objects.create(
+            country_region=self.country_region,
+            year=self.year,
+            happiness_score=self.happiness_score
         )
 
-        # 作成したFreedomDataがデータベースに保存されているか確認
-        self.assertEqual(FreedomData.objects.count(), 1)
-
-        # 作成したFreedomDataの関連が正しいか確認
-        self.assertEqual(freedom_data.country_region, country_region)
-        self.assertEqual(freedom_data.year, year)
-        self.assertEqual(freedom_data.freedom, 0.654)
-
-    def test_create_generosity_data(self):
-        # CountryとRegionを作成
-        country = Country.objects.create(name="Test Country")
-        region = Region.objects.create(name="Test Region")
-
-        # CountryRegionとYearを作成
-        country_region = CountryRegion.objects.create(country=country, region=region)
-        year = Year.objects.create(year=2023)
-
-        # GenerosityDataモデルを作成
-        generosity_data = GenerosityData.objects.create(
-            country_region=country_region,
-            year=year,
-            generosity=0.567  # ここに適切な値を設定
-        )
-
-        # 作成したGenerosityDataがデータベースに保存されているか確認
-        self.assertEqual(GenerosityData.objects.count(), 1)
-
-        # 作成したGenerosityDataの関連が正しいか確認
-        self.assertEqual(generosity_data.country_region, country_region)
-        self.assertEqual(generosity_data.year, year)
-        self.assertEqual(generosity_data.generosity, 0.567)
-
-    def test_create_government_trust_data(self):
-        # CountryとRegionを作成
-        country = Country.objects.create(name="Test Country")
-        region = Region.objects.create(name="Test Region")
-
-        # CountryRegionとYearを作成
-        country_region = CountryRegion.objects.create(country=country, region=region)
-        year = Year.objects.create(year=2023)
-
-        # GovernmentTrustDataモデルを作成
-        government_trust_data = GovernmentTrustData.objects.create(
-            country_region=country_region,
-            year=year,
-            government_trust=0.678  # ここに適切な値を設定
-        )
-
-        # 作成したGovernmentTrustDataがデータベースに保存されているか確認
-        self.assertEqual(GovernmentTrustData.objects.count(), 1)
-
-        # 作成したGovernmentTrustDataの関連が正しいか確認
-        self.assertEqual(government_trust_data.country_region, country_region)
-        self.assertEqual(government_trust_data.year, year)
-        self.assertEqual(government_trust_data.government_trust, 0.678)
-
-    def test_create_happiness_score(self):
-        # CountryとRegionを作成
-        country = Country.objects.create(name="Test Country")
-        region = Region.objects.create(name="Test Region")
-
-        # CountryRegionとYearを作成
-        country_region = CountryRegion.objects.create(country=country, region=region)
-        year = Year.objects.create(year=2023)
-
-        # HappinessScoreモデルを作成
-        happiness_score_data = HappinessScore.objects.create(
-            country_region=country_region,
-            year=year,
-            happiness_score=7.89  # ここに適切な値を設定
-        )
-
-        # 作成したHappinessScoreがデータベースに保存されているか確認
+        # Check the Happiness Score data is saved in the database
         self.assertEqual(HappinessScore.objects.count(), 1)
+        self.assertEqual(happiness_score.country_region, self.country_region)
+        self.assertEqual(happiness_score.year, self.year)
+        self.assertEqual(happiness_score.happiness_score, self.happiness_score)
+    
+    def test_freedom_data(self):
+        # Set random values in Freedom Data model
+        self.freedom = Decimal(random.uniform(1000, 100000))
+        
+        # Create Freedom Data model
+        freedom_data = FreedomData.objects.create(
+            country_region=self.country_region,
+            year=self.year,
+            freedom=self.freedom
+        )
 
-        # 作成したHappinessScoreの関連が正しいか確認
-        self.assertEqual(happiness_score_data.country_region, country_region)
-        self.assertEqual(happiness_score_data.year, year)
-        self.assertEqual(happiness_score_data.happiness_score, 7.89)
+        # Check the Freedom data is saved in the database
+        self.assertEqual(FreedomData.objects.count(), 1)
+        self.assertEqual(freedom_data.country_region, self.country_region)
+        self.assertEqual(freedom_data.year, self.year)
+        self.assertEqual(freedom_data.freedom, self.freedom)  
+    
+    def test_generosity_data(self):
+        # Set random values in Generosity Data model
+        self.generosity = Decimal(random.uniform(1000, 100000))
+        
+        # Create Generosity Data model
+        generosity_data = GenerosityData.objects.create(
+            country_region=self.country_region,
+            year=self.year,
+            generosity=self.generosity
+        )
 
+        # Check the Generosity data is saved in the database
+        self.assertEqual(GenerosityData.objects.count(), 1)
+        self.assertEqual(generosity_data.country_region, self.country_region)
+        self.assertEqual(generosity_data.year, self.year)
+        self.assertEqual(generosity_data.generosity, self.generosity) 
+    
+    def test_government_trust_data(self):
+        # Set random values in Government Trust Data model
+        self.government_trust = Decimal(random.uniform(1000, 100000))
+        
+        # Create Government Trust Data model
+        government_trust_data = GovernmentTrustData.objects.create(
+            country_region=self.country_region,
+            year=self.year,
+            government_trust=self.government_trust
+        )
+
+        # Check the Government Trust data is saved in the database
+        self.assertEqual(GovernmentTrustData.objects.count(), 1)
+        self.assertEqual(government_trust_data.country_region, self.country_region)
+        self.assertEqual(government_trust_data.year, self.year)
+        self.assertEqual(government_trust_data.government_trust, self.government_trust)  
+
+    

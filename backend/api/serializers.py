@@ -1,21 +1,23 @@
-# api/serializers.py
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from .models import Country, Region, Year, CountryRegion, EconomicData, SocialSupportData, HealthData, HappinessScore, FreedomData, GenerosityData, GovernmentTrustData
 
+# WorldHappinessTokenObtainPairSerializer was written with reference to the following site
+# https://sushil-kamble.medium.com/django-rest-framework-react-authentication-workflow-2022-part-1-a21f22b3f358
 class WorldHappinessTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
 
-        # カスタムのクレームを追加
         token['username'] = user.username
         token['email'] = user.email
 
         return token
 
+# RegisterSerializer was written with reference to the following site
+# https://sushil-kamble.medium.com/django-rest-framework-react-authentication-workflow-2022-part-1-a21f22b3f358
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password])

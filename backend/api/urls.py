@@ -4,6 +4,9 @@ from . import views
 from rest_framework_simplejwt.views import TokenRefreshView
 from .views import CountryViewSet, RegionViewSet, CountryRegionViewSet, EconomicDataViewSet, YearViewSet, SocialSupportDataViewSet, HealthDataViewSet, HappinessScoreViewSet, FreedomDataViewSet, GovernmentTrustDataViewSet, GenerosityDataViewSet
 
+# This was written with reference to the following site
+# https://sushil-kamble.medium.com/django-rest-framework-react-authentication-workflow-2022-part-1-a21f22b3f358
+
 # DRF のルーターインスタンスを作成
 router = DefaultRouter()
 router.register(r'countries', CountryViewSet)
