@@ -4,7 +4,7 @@ from . import views
 from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
-    # テンプレートを表示するためのビュー
+    # Redirect index to swagger to display API information
     path('', RedirectView.as_view(url='/swagger/', permanent=True), name='index'),
     
     # JWT Token
