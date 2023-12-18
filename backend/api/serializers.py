@@ -47,11 +47,9 @@ class RegionSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
     def create(self, validated_data):
-        # 新しい地域を作成してデータベースに保存
         return Region.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        # 既存の地域インスタンスを更新
         instance.name = validated_data.get('name', instance.name)
         instance.save()
         return instance
@@ -82,7 +80,6 @@ class CountrySerializer(serializers.ModelSerializer):
 
         region_id = validated_data.get('region_id')
         if region_id is not None:
-            # 既存のリージョン関連をクリア
             instance.regions.clear()
             self.add_region_to_country(instance, region_id)
 
@@ -96,15 +93,13 @@ class CountrySerializer(serializers.ModelSerializer):
 class YearSerializer(serializers.ModelSerializer):
     class Meta:
         model = Year
-        fields = ['id', 'year']  # IDフィールドを追加
+        fields = ['id', 'year']
 
     def create(self, validated_data):
-        # 新しい年を作成してデータベースに保存
         year = Year.objects.create(**validated_data)
         return year
 
     def update(self, instance, validated_data):
-        # 既存の年インスタンスを更新
         instance.year = validated_data.get('year', instance.year)
         instance.save()
         return instance
@@ -135,7 +130,6 @@ class CountryRegionSerializer(serializers.ModelSerializer):
         fields = ['id', 'country_id', 'region_id', 'country', 'region']
 
 
-# 共通のベースシリアライザー
 class BaseDataSerializer(serializers.ModelSerializer):
     country_region = CountryRegionSerializer(read_only=True)
     year = YearSerializer(read_only=True)
@@ -155,17 +149,15 @@ class BaseDataSerializer(serializers.ModelSerializer):
         abstract = True
         
     def create(self, validated_data):
-        # 新しいデータを作成してデータベースに保存
         return self.Meta.model.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        # 既存のインスタンスを更新
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
         return instance
 
-# EconomicDataSerializerのリファクタリング
+# Economic Data
 class EconomicDataSerializer(BaseDataSerializer):
     class Meta:
         model = EconomicData
@@ -175,7 +167,7 @@ class EconomicDataSerializer(BaseDataSerializer):
             'year': {'read_only': True}
         }
 
-# SocialSupportDataSerializerのリファクタリング
+# Social Support Data
 class SocialSupportDataSerializer(BaseDataSerializer):
     class Meta:
         model = SocialSupportData
@@ -185,7 +177,7 @@ class SocialSupportDataSerializer(BaseDataSerializer):
             'year': {'read_only': True}
         }
 
-# HealthDataSerializerのリファクタリング
+# Health Data
 class HealthDataSerializer(BaseDataSerializer):
     class Meta:
         model = HealthData
@@ -195,7 +187,7 @@ class HealthDataSerializer(BaseDataSerializer):
             'year': {'read_only': True}
         }
 
-# HappinessScoreSerializerのリファクタリング
+# Happiness Score
 class HappinessScoreSerializer(BaseDataSerializer):
     class Meta:
         model = HappinessScore
@@ -205,6 +197,7 @@ class HappinessScoreSerializer(BaseDataSerializer):
             'year': {'read_only': True}
         }
 
+# Freedom
 class FreedomDataSerializer(BaseDataSerializer):
     class Meta:
         model = FreedomData
@@ -214,6 +207,7 @@ class FreedomDataSerializer(BaseDataSerializer):
             'year': {'read_only': True}
         }
 
+# Generosity
 class GenerosityDataSerializer(BaseDataSerializer):
     class Meta:
         model = GenerosityData
@@ -223,6 +217,7 @@ class GenerosityDataSerializer(BaseDataSerializer):
             'year': {'read_only': True}
         }
 
+# Government Trust Data
 class GovernmentTrustDataSerializer(BaseDataSerializer):
     class Meta:
         model = GovernmentTrustData

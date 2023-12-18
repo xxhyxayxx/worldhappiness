@@ -22,7 +22,7 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
 class CountryViewSet(viewsets.ModelViewSet):
-    queryset = Country.objects.all().prefetch_related('regions')
+    queryset = Country.objects.all()
     serializer_class = CountrySerializer
     permission_classes = [IsAuthenticated]
 
@@ -92,7 +92,9 @@ def getRoutes(request):
         'Social Support Data List': ('http://127.0.0.1:8000/api/socialsupportdata/', 'GET: Endpoint to list social support data entries, POST: Endpoint to create a social support data entry.'),
         'Health Data List': ('http://127.0.0.1:8000/api/healthdata/', 'GET: Endpoint to list health data entries, POST: Endpoint to create a health data entry.'),
         'Happiness Score List': ('http://127.0.0.1:8000/api/happinessscore/', 'GET: Endpoint to list happiness scores, POST: Endpoint to create a happiness score entry.'),
-        # Add more endpoints with descriptions as needed
+        'Freedom Data List': ('http://127.0.0.1:8000/api/freedomdata/', 'GET: Endpoint to list freedom data entries, POST: Endpoint to create a freedom data entry.'),
+        'Government Trust Data List': ('http://127.0.0.1:8000/api/governmenttrust/', 'GET: Endpoint to list government trust data entries, POST: Endpoint to create a government trust data entry.'),
+        'Generosity Data List': ('http://127.0.0.1:8000/api/generosity/', 'GET: Endpoint to list generosity data entries, POST: Endpoint to create a generosity data entry.'),
     }
     return render(request, 'api/index.html', {'routes': routes})
 

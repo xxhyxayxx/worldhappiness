@@ -135,6 +135,8 @@ REST_FRAMEWORK = {
     )
 }
 
+# SIMPLE JWT was written with reference to the following site
+# https://sushil-kamble.medium.com/django-rest-framework-react-authentication-workflow-2022-part-1-a21f22b3f358
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=50),

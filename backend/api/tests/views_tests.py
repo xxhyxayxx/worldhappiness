@@ -71,10 +71,9 @@ class RegionViewSetTestCase(BaseTestCase):
 class CountryRegionViewSetTestCase(BaseTestCase):
     def setUp(self):
         super().setUp()
-        # Country と Region インスタンスを作成
+       
         self.country = Country.objects.create(name="Test Country")
         self.region = Region.objects.create(name="Test Region")
-        # CountryRegion インスタンスを作成
         self.country_region = CountryRegion.objects.create(country=self.country, region=self.region)
 
     def test_create_country_region(self):
@@ -90,9 +89,9 @@ class CountryRegionViewSetTestCase(BaseTestCase):
         url = reverse('countryregion-detail', kwargs={'pk': self.country_region.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['country'], self.country.name)  # 'country' フィールドの値を確認
-        self.assertEqual(response.data['region'], self.region.name)  # 'region' フィールドの値を確認
-
+        self.assertEqual(response.data['country'], self.country.name)  
+        self.assertEqual(response.data['region'], self.region.name)
+        
     def test_update_country_region(self):
         new_region = Region.objects.create(name="New Test Region")
         url = reverse('countryregion-detail', kwargs={'pk': self.country_region.id})
@@ -143,7 +142,6 @@ class YearViewSetTestCase(BaseTestCase):
 class CommonDataTestCase(BaseTestCase):
     def setUp(self):
         super().setUp()
-        # 共通データのセットアップ
         self.country = Country.objects.create(name="Test Country")
         self.region = Region.objects.create(name="Test Region")
         self.country_region = CountryRegion.objects.create(country=self.country, region=self.region)
@@ -173,8 +171,8 @@ class EconomicDataViewSetTestCase(CommonDataTestCase):
         economic_data = EconomicData.objects.create(country_region=self.country_region, year=self.year, gdp=123.45)
         url = reverse('economicdata-detail', kwargs={'pk': economic_data.id})
         data = {
-            'country_region_id': self.country_region.id,  # 必要に応じて追加
-            'year_id': self.year.id,  # 必要に応じて追加
+            'country_region_id': self.country_region.id,
+            'year_id': self.year.id,
             'gdp': 678.90
         }
         response = self.client.put(url, data)
