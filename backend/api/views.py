@@ -292,3 +292,7 @@ class GenerosityDataViewSet(viewsets.ModelViewSet):
     queryset = GenerosityData.objects.all()
     serializer_class = GenerosityDataSerializer
     permission_classes = [IsAuthenticated]
+
+
+def index(request):
+    return render(request, 'api/index.html')

@@ -1,11 +1,10 @@
 from django.urls import path
-from django.views.generic import RedirectView
 from . import views
 from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
-    # Redirect index to swagger to display API information
-    path('', RedirectView.as_view(url='/swagger/', permanent=True), name='index'),
+    # index.html
+    path('', views.index, name='index'),
     
     # JWT Token
     path('token/', views.WorldHappinessTokenObtainPairView.as_view(), name='token_obtain_pair'),
