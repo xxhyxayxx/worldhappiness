@@ -20,7 +20,7 @@ class BaseTestCase(TestCase):
 class RegionSerializerTestCase(BaseTestCase):
     def test_create_region(self):
         data = {"name": "Test Region"}
-        response = self.client.post('/api/regions/', data)
+        response = self.client.post('/api/region/', data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Region.objects.count(), 1)
         self.assertEqual(Region.objects.get().name, "Test Region")
@@ -28,19 +28,19 @@ class RegionSerializerTestCase(BaseTestCase):
     def test_update_region(self):
         region = Region.objects.create(name="Old Region")
         data = {"name": "New Region"}
-        response = self.client.put(f'/api/regions/{region.id}/', data)
+        response = self.client.put(f'/api/region/{region.id}/', data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Region.objects.get(id=region.id).name, "New Region")
 
     def test_update_nonexistent_region(self):
         data = {"name": "New Region"}
-        response = self.client.put('/api/regions/999/', data)
+        response = self.client.put('/api/region/999/', data)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 class CountrySerializerTestCase(BaseTestCase):
     def test_create_country(self):
         data = {"name": "Test Country"}
-        response = self.client.post('/api/countries/', data)
+        response = self.client.post('/api/country/', data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Country.objects.count(), 1)
         self.assertEqual(Country.objects.get().name, "Test Country")
@@ -48,19 +48,19 @@ class CountrySerializerTestCase(BaseTestCase):
     def test_update_country(self):
         country = Country.objects.create(name="Old Country")
         data = {"name": "New Country"}
-        response = self.client.put(f'/api/countries/{country.id}/', data)
+        response = self.client.put(f'/api/country/{country.id}/', data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Country.objects.get(id=country.id).name, "New Country")
 
     def test_update_nonexistent_country(self):
         data = {"name": "New Country"}
-        response = self.client.put('/api/countries/999/', data)
+        response = self.client.put('/api/country/999/', data)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_associate_region_to_country(self):
         region = Region.objects.create(name="Test Region")
         data = {"name": "Test Country", "region_id": region.id}
-        response = self.client.post('/api/countries/', data)
+        response = self.client.post('/api/country/', data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         country = Country.objects.get(name="Test Country")
         self.assertEqual(country.regions.count(), 1)
@@ -68,7 +68,7 @@ class CountrySerializerTestCase(BaseTestCase):
 
     def test_invalid_association(self):
         data = {"name": "Test Country", "region_id": 999}
-        response = self.client.post('/api/countries/', data)
+        response = self.client.post('/api/country/', data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("region_id", response.data)
 
@@ -84,7 +84,7 @@ class CountryRegionSerializerTestCase(BaseTestCase):
             'country_id': self.country.id,
             'region_id': self.region.id
         }
-        response = self.client.post('/api/countryregions/', data)
+        response = self.client.post('/api/countryregion/', data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(CountryRegion.objects.count(), 2)
         new_country_region = CountryRegion.objects.latest('id')
@@ -92,7 +92,7 @@ class CountryRegionSerializerTestCase(BaseTestCase):
         self.assertEqual(new_country_region.region, self.region)
 
     def test_read_country_region(self):
-        response = self.client.get(f'/api/countryregions/{self.country_region.id}/')
+        response = self.client.get(f'/api/countryregion/{self.country_region.id}/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['country'], self.country.name)
         self.assertEqual(response.data['region'], self.region.name)
@@ -103,13 +103,13 @@ class CountryRegionSerializerTestCase(BaseTestCase):
             'country_id': self.country.id,
             'region_id': new_region.id
         }
-        response = self.client.put(f'/api/countryregions/{self.country_region.id}/', data)
+        response = self.client.put(f'/api/countryregion/{self.country_region.id}/', data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_country_region = CountryRegion.objects.get(id=self.country_region.id)
         self.assertEqual(updated_country_region.region, new_region)
 
     def test_delete_country_region(self):
-        response = self.client.delete(f'/api/countryregions/{self.country_region.id}/')
+        response = self.client.delete(f'/api/countryregion/{self.country_region.id}/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(CountryRegion.objects.filter(id=self.country_region.id).exists())
 
@@ -124,13 +124,13 @@ class YearSerializerTestCase(BaseTestCase):
     def test_update_year(self):
         year = Year.objects.create(year=2020)
         data = {"year": 2021}
-        response = self.client.put(f'/api/years/{year.id}/', data)
+        response = self.client.put(f'/api/year/{year.id}/', data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Year.objects.get(id=year.id).year, 2021)
 
     def test_update_nonexistent_year(self):
         data = {"year": 2021}
-        response = self.client.put('/api/years/999/', data)
+        response = self.client.put('/api/year/999/', data)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 class EconomicDataSerializerTestCase(BaseTestCase):
