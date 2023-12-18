@@ -42,22 +42,32 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 class RegionSerializer(serializers.ModelSerializer):
+    # This inner class Meta defines the serializer's behavior
     class Meta:
-        model = Region
-        fields = ['id', 'name']
+        model = Region  # Specifies the model that the serializer is for
+        fields = ['id', 'name']  # Indicates which fields should be serialized
 
+    # The create method is used to create a new Region instance
+    # from the validated data
     def create(self, validated_data):
         return Region.objects.create(**validated_data)
 
+    # The update method is used to update an existing Region instance
+    # with the validated data
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
         instance.save()
         return instance
 
+from rest_framework import serializers
+
 class CountrySerializer(serializers.ModelSerializer):
+    # Nested serializer to represent regions related to the country
     regions = RegionSerializer(many=True, read_only=True)
+    # Field to accept region ID for write operations
     region_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
 
+    # Custom method to add a region to a country
     def add_region_to_country(self, country, region_id):
         try:
             region = Region.objects.get(id=region_id)
@@ -65,6 +75,8 @@ class CountrySerializer(serializers.ModelSerializer):
         except Region.DoesNotExist:
             raise serializers.ValidationError({'region_id': 'This region does not exist.'})
 
+    # Overridden create method to handle country creation
+    # and adding a region to it if provided
     def create(self, validated_data):
         region_id = validated_data.pop('region_id', None)
         country = Country.objects.create(**validated_data)
@@ -74,6 +86,8 @@ class CountrySerializer(serializers.ModelSerializer):
 
         return country
 
+    # Overridden update method to handle country updates
+    # and changing its region if provided
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
         instance.save()
@@ -91,14 +105,17 @@ class CountrySerializer(serializers.ModelSerializer):
 
 
 class YearSerializer(serializers.ModelSerializer):
+    # Meta class defines serializer properties
     class Meta:
         model = Year
         fields = ['id', 'year']
 
+    # Create a new Year instance
     def create(self, validated_data):
         year = Year.objects.create(**validated_data)
         return year
 
+    # Update an existing Year instance
     def update(self, instance, validated_data):
         instance.year = validated_data.get('year', instance.year)
         instance.save()
@@ -106,6 +123,7 @@ class YearSerializer(serializers.ModelSerializer):
 
 
 class CountryRegionSerializer(serializers.ModelSerializer):
+    # Fields for linking country and region by ID for write operations
     country_id = serializers.PrimaryKeyRelatedField(
         source='country',
         queryset=Country.objects.all(),
@@ -116,6 +134,7 @@ class CountryRegionSerializer(serializers.ModelSerializer):
         queryset=Region.objects.all(),
         write_only=True
     )
+    # Read-only fields to return the country and region names
     country = serializers.SlugRelatedField(
         slug_field='name',
         read_only=True
@@ -131,9 +150,11 @@ class CountryRegionSerializer(serializers.ModelSerializer):
 
 
 class BaseDataSerializer(serializers.ModelSerializer):
+    # Nested serializers for related country-region and year data
     country_region = CountryRegionSerializer(read_only=True)
     year = YearSerializer(read_only=True)
 
+    # Fields to accept primary keys for country-region and year for write operations
     country_region_id = serializers.PrimaryKeyRelatedField(
         write_only=True,
         queryset=CountryRegion.objects.all(),
@@ -146,11 +167,13 @@ class BaseDataSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        abstract = True
+        abstract = True  # Marks this serializer as abstract
         
+    # Overridden create method to handle creation of new instances
     def create(self, validated_data):
         return self.Meta.model.objects.create(**validated_data)
 
+    # Overridden update method to handle updates to existing instances
     def update(self, instance, validated_data):
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
@@ -160,8 +183,8 @@ class BaseDataSerializer(serializers.ModelSerializer):
 # Economic Data
 class EconomicDataSerializer(BaseDataSerializer):
     class Meta:
-        model = EconomicData
-        fields = '__all__'
+        model = EconomicData  # Specifies the model associated with this serializer
+        fields = '__all__'  # Includes all fields from the model
         extra_kwargs = {
             'country_region': {'read_only': True},
             'year': {'read_only': True}
