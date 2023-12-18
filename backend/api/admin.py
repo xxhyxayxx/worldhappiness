@@ -1,7 +1,6 @@
 from django.contrib import admin
 from api.models import Country, Region, CountryRegion, EconomicData, SocialSupportData, HealthData, HappinessScore, FreedomData, GovernmentTrustData, GenerosityData
 
-# CountryとRegionをadminサイトに登録
 admin.site.register(Country)
 admin.site.register(Region)
 admin.site.register(EconomicData)
